@@ -85,12 +85,7 @@ export default function CookieBanner() {
               >
                 Tout refuser
               </button>
-              <button
-                onClick={openPreferences}
-                className="bg-indigo-700 hover:bg-indigo-600 text-white px-4 py-2 rounded-md transition-colors duration-300 text-sm font-medium"
-              >
-                Paramétrer
-              </button>
+             
               <button
                 onClick={acceptCookies}
                 className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-md shadow-md transition-colors duration-300 text-sm font-medium"

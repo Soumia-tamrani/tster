@@ -78,9 +78,11 @@ model User {
   utmSource             String?
   utmMedium             String?
   utmCampaign           String?
-  parrainId             String?
-  parrain               User?     @relation("Parrainage", fields: [parrainId], references: [id])
-  filleuls              User[]    @relation("Parrainage")
+  
+  parrainId   String? 
+  parrain     User?    @relation("Parrainage", fields: [parrainId], references: [id])
+  filleuls    User[]   @relation("Parrainage")
+
 }
 
 model ProfessionalDetail {
