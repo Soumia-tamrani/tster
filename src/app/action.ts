@@ -353,23 +353,17 @@ export async function registerProfessional(formData: FormData) {
 
     console.log("Parsed data before validation:", rawData);
     // salma
-    if (rawData.parrainId && !rawData.referralSource) {
-      rawData.referralSource = "FRIEND";
-    }
+   if (rawData.parrainId === "") {
+  rawData.parrainId = null;
+}
+
 
     const validated = professionalLeadSchema.parse(rawData);
     console.log("Validation successful:", validated);
     // ajout salma : vérification que l'ID du parrain existe
     let parrainUserId: string | null = null;
 
-    if (validated.parrainId) {
-      const parrainUser = await prisma.user.findUnique({
-        where: { id: validated.parrainId },
-      });
-      if (parrainUser) {
-        parrainUserId = parrainUser.id;
-      }
-    }
+    
 
     const existingUser = await prisma.user.findUnique({
       where: { Email: validated.email },
@@ -394,6 +388,9 @@ export async function registerProfessional(formData: FormData) {
       });
       if (parrainUser) {
         parrainUserId = parrainUser.id;
+         console.log("✅ Parrain trouvé avec ID :", parrainUserId);
+  } else {
+    console.warn("⚠️ Aucun parrain trouvé pour l'ID :", validated.parrainId);
       }
     }
 
@@ -408,7 +405,9 @@ export async function registerProfessional(formData: FormData) {
           country: validated.country,
           sector: validated.sector as any,
           subscribedToNewsletter: validated.subscribedToNewsletter,
-          parrainId: parrainUserId, //  salma
+parrain: parrainUserId && parrainUserId.trim() !== ""
+  ? { connect: { id: parrainUserId } }
+  : undefined,
           referralSource: validated.referralSource || null,
           utmSource: validated.utmSource || null,
           utmMedium: validated.utmMedium || null,
@@ -459,7 +458,10 @@ export async function registerProfessional(formData: FormData) {
           registrationDate: new Date(),
           ipAddress: "127.0.0.1",
           emailVerified: validated.emailVerified,
-          parrainId: parrainUserId,
+parrain: parrainUserId
+  ? { connect: { id: parrainUserId } }
+  : undefined,
+
           professionalDetails: {
             create: {
               professionalInterests: validated.professionalInterests as any[],
