@@ -98,7 +98,7 @@ export default function RegisterPage() {
           <ProfessionalForm />
         ) : (
           <BusinessForm />
-        )}
+        )}      
       </div>
     </div>
   );
