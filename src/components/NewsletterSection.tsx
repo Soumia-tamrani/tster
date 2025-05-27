@@ -20,7 +20,7 @@ const NewsletterSection = () => {
         setEmail('');
       }
     } catch (error) {
-      setSuccessMessage('Une erreur s\'est produite. Veuillez réessayer.');
+      setSuccessMessage('Une erreur s\'est produite. Veuillez réessayer.');    
     }
   };
 
