@@ -38,7 +38,7 @@ export default function RegisterPage() {
         {activeTab === null ? (
           <>
             <h2 className="text-[24px] font-semibold text-[#013959] mb-4">
-              Lorem ipsum dolor sit amet
+              Lorem ipsum dolor sit ametUHJKGHLKRDFGHLKJH
             </h2>
             <p className="text-center text-gray-500 mb-8 max-w-[600px]">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
