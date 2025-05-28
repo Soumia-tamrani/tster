@@ -606,7 +606,7 @@ export default function BusinessForm({
           </motion.div>
         ) : (
           <>
-            {submissionError && (
+            {submissionError && (    
               <motion.div
                 className="mb-4 p-4 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center"
                 initial="hidden"
