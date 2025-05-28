@@ -1,105 +1,117 @@
-"use client";
+    "use client";
 
-import React, { useState } from "react";
-import { UserRound, Building2, CheckCircle, ArrowLeft } from "lucide-react";
-import ProfessionalForm from "@/components/professional-form";
-import BusinessForm from "@/components/business-form";
+    import React, { useState } from "react";
+    import { UserRound, Building2, CheckCircle, ArrowLeft } from "lucide-react";
 
-export default function RegisterPage() {
-  const [activeTab, setActiveTab] = useState<string | null>(null);
+    export default function RegisterPage() {
+      const [activeTab, setActiveTab] = useState<string | null>(null);
 
-  const features = [
-    "Offres d'emploi exclusives",
-    "Mentorat personnalisé",
-    "Événements de networking",
-  ];
+      const features = [
+        "Offres d'emploi exclusives",
+        "Mentorat personnalisé",
+        "Événements de networking",
+      ];
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      {/* HEADER */}
-      <div className="w-full bg-[#013959] text-white pt-12 pb-[220px] text-center relative">
-        {activeTab && (
-          <button
-            className="absolute top-4 left-8 flex items-center text-white hover:underline"
-            onClick={() => setActiveTab(null)}
+      return (
+        <div className="relative w-[1440px] h-[1705px] bg-[#FCFCFD] flex flex-col items-center mx-auto">
+          {/* Background Rectangle */}
+          <div className="absolute w-[1550px] h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
+          <a
+            href="/"
+            className="absolute z-20 top-[77px] left-[122px] w-[45px] h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
           >
-            <ArrowLeft className="mr-2" size={20} />
-            Retour
-          </button>
-        )}
-        <h1 className="text-[32px] font-bold mb-2">Lorem ipsum dolor sit amet</h1>
-        <p className="max-w-[600px] mx-auto text-sm text-white/80">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
-        </p>
-      </div>
+            <ArrowLeft className="text-white" size={20} />
+          </a>
 
-      {/* MAIN CARD CONTAINER */}
-      <div className="bg-white rounded-[30px] border border-[#E0E0E0] mt-[-150px] shadow-[0_3px_6px_rgba(171,171,171,0.06),0_11px_11px_rgba(171,171,171,0.05)] w-full max-w-[1013px] p-[47px_61px] flex flex-col items-center">
-        {activeTab === null ? (
-          <>
-            <h2 className="text-[24px] font-semibold text-[#013959] mb-4">
-              Lorem ipsum dolor sit ametUHJKGHLKRDFGHLKJH
-            </h2>
-            <p className="text-center text-gray-500 mb-8 max-w-[600px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
-            </p>
-
-            <div className="flex flex-col md:flex-row gap-[56px]">
-              {/* Professionnel CARD */}
-              <div className="w-[427px] h-[462px] rounded-[30px] border-[1.9px] border-[#E0E0E0] p-[47px_38px] flex flex-col items-center text-center hover:shadow-lg transition">
-                <div className="w-[75px] h-[75px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-5">
-                  <UserRound className="text-[#1CD5F5]" size={32} />
-                </div>
-                <h3 className="text-[22px] font-bold text-[#013959] mb-5">
-                  Professionnel
-                </h3>
-                <ul className="text-gray-600 space-y-[16px] mb-8">
-                  {features.map((feature, i) => (
-                    <li key={`pro-${i}`} className="flex items-center">
-                      <CheckCircle className="text-green-500 mr-2" size={18} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className="w-[222px] h-[46px] bg-[#00CFFF] text-white rounded-full text-sm font-medium hover:bg-[#00b8e6] transition"
-                  onClick={() => setActiveTab("professional")}
-                >
-                  Get start
-                </button>
-              </div>
-
-              {/* Entreprise CARD */}
-              <div className="w-[427px] h-[462px] rounded-[30px] border-[1.9px] border-[#E0E0E0] p-[47px_38px] flex flex-col items-center text-center hover:shadow-lg transition">
-                <div className="w-[75px] h-[75px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-5">
-                  <Building2 className="text-[#1CD5F5]" size={32} />
-                </div>
-                <h3 className="text-[22px] font-bold text-[#013959] mb-5">
-                  Entreprise
-                </h3>
-                <ul className="text-gray-600 space-y-[16px] mb-8">
-                  {features.map((feature, i) => (
-                    <li key={`biz-${i}`} className="flex items-center">
-                      <CheckCircle className="text-green-500 mr-2" size={18} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className="w-[222px] h-[46px] bg-[#00CFFF] text-white rounded-full text-sm font-medium hover:bg-[#00b8e6] transition"
-                  onClick={() => setActiveTab("business")}
-                >
-                  Get start
-                </button>
-              </div>
+          {/* Header Section on Blue Background */}
+          <div className="absolute w-[700px] h-[120px] top-[140px] left-[369px] flex flex-col items-center gap-6 z-10">
+            {activeTab && (
+              <button
+                className="absolute top-[-90px] left-[-290px] flex items-center text-white hover:underline"
+                onClick={() => setActiveTab(null)}
+              >
+                <ArrowLeft className="mr-2" size={16} />
+                Retour
+              </button>
+            )}
+            <div className="text-center">
+              <h1 className="text-4xl font-semibold mb-2 text-white">
+                Lorem ipsum dolor sit amet
+              </h1>
+              <p className="text-sm text-white">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl
+                nec tincidunt luctus, nunc erat sollicitudin ipsum.
+              </p>
             </div>
-          </>
-        ) : activeTab === "professional" ? (
-          <ProfessionalForm />
-        ) : (
-          <BusinessForm />
-        )}      
-      </div>
-    </div>
-  );
-}
+          </div>
+
+          {/* Main Card Container */}
+          <div className="bg-white rounded-[22px] mt-[300px] shadow-[0_44px_18px_rgba(171,171,171,0.01),0_25px_15px_rgba(171,171,171,0.03),0_11px_11px_rgba(171,171,171,0.05),0_3px_6px_rgba(171,171,171,0.06)] w-[1013px] h-[799.44px] p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border-[3px] border-rgba(215,215,219,0.74)">
+            {activeTab === null ? (
+              <>
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-semibold mb-2">
+                    Lorem ipsum dolor sit amet
+                  </h2>
+                  <p className="text-sm text-[#7E8B93]">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod,
+                    nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
+                  </p>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-10">
+                  {/* Professionnel CARD */}
+                  <div className="w-[426.79px] h-[462.44px] rounded-[29.73px] border-[1.92px] border-[#E0E0E0] p-[47px_38.36px] flex flex-col items-center text-center hover:shadow-lg transition">
+                    <div className="w-[75.05px] h-[75.05px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-5">
+                      <UserRound className="text-[#1CD5F5]" size={24} />
+                    </div>
+                    <h3 className="text-2xl font-semibold mb-5"> Professionnel</h3>
+                    <ul className="text-[#8C8C8C] space-y-[12px] mb-8">
+                      {features.map((feature, i) => (
+                        <li key={`pro-${i}`} className="flex items-center">
+                          <CheckCircle className="text-green-500 mr-2" size={12} />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      className="w-[222px] h-[46.13px] bg-[#1CD5F5] text-white rounded-[73.18px] text-base font-semibold hover:bg-[#00b8e6] transition flex items-center justify-center"
+                      onClick={() => setActiveTab("professional")}
+                    >
+                      Get start
+                    </button>
+                  </div>
+
+                  {/* Entreprise CARD */}
+                  <div className="w-[410.84px] h-[455.37px] rounded-[28.62px] border-[1.85px] border-[#E0E0E0] p-[47px_36.93px] flex flex-col items-center text-center hover:shadow-lg transition">
+                    <div className="w-[72.25px] h-[72.25px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-5">
+                      <Building2 className="text-[#1CD5F5]" size={24} />
+                    </div>
+                    <h3 className="text-2xl font-semibold mb-5">Entreprise</h3>
+                    <ul className="text-[#8C8C8C] space-y-[12px] mb-8">
+                      {features.map((feature, i) => (
+                        <li key={`biz-${i}`} className="flex items-center">
+                          <CheckCircle className="text-green-500 mr-2" size={12} />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      className="w-[222px] h-[46.13px] bg-[#1CD5F5] text-white rounded-[73.18px] text-base font-semibold hover:bg-[#00b8e6] transition flex items-center justify-center"
+                      onClick={() => setActiveTab("business")}
+                    >
+                      Get start
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : activeTab === "professional" ? (
+              <div>Professional Form Content</div>
+            ) : (
+              <div>Business Form Content</div>
+            )}
+          </div>
+        </div>
+      );
+    }
+  // This code is a React component for a registration page with two tabs: Professional and Business.

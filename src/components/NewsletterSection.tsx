@@ -30,7 +30,7 @@ const NewsletterSection = () => {
       
       {/* Texte */}
       <div className="text-left max-w-full md:max-w-xl">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#013959] dark:text-white">
+        <h2 className="text-2xl sm:text-2xl font-bold text-[#013959] dark:text-white">
           S’abonner à notre newsletter
         </h2>
         <p
