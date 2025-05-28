@@ -3,9 +3,10 @@ import  env  from "@/lib/env"
 import { NextResponse } from "next/server";
 import * as nodemailer from "nodemailer";
 
-const user = env.NEXT_PUBLIC_EMAIL_USER;
-const pass = env.NEXT_PUBLIC_EMAIL_PASS;
-const service = env.NEXT_PUBLIC_EMAIL_SERVICE_PROVIDER;
+const user = env.EMAIL_USER;
+const pass = env.EMAIL_PASSWORD;
+const service = env.SMTP_PROVIDER;
+
 
 const transporter = nodemailer.createTransport({
   service: service,
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     const { to, subject, html } = await request.json();
 
     await transporter.sendMail({
-      from: "noreply@mqttbroker.com",
+      from: "Hello@catchub.com",
       to,
       subject,
       html,
