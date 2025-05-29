@@ -1,4 +1,10 @@
 'use client';
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -19,24 +25,42 @@ export default function CookieBanner() {
   }, []);
 
   const acceptCookies = () => {
-    Cookies.set('cookie_consent', 'accepted', { expires: 365, sameSite: 'Lax' });
-    Cookies.set('cookie_preferences', JSON.stringify({
-      functional: true,
-      statistics: true,
-      marketing: true,
-    }), { expires: 365, sameSite: 'Lax' });
-    closeBanner();
-  };
+  Cookies.set('cookie_consent', 'accepted', { expires: 365, sameSite: 'Lax' });
+  Cookies.set('cookie_preferences', JSON.stringify({
+    functional: true,
+    statistics: true,
+    marketing: true,
+  }), { expires: 365, sameSite: 'Lax' });
 
-  const refuseCookies = () => {
-    Cookies.set('cookie_consent', 'refused', { expires: 365, sameSite: 'Lax' });
-    Cookies.set('cookie_preferences', JSON.stringify({
-      functional: true,
-      statistics: false,
-      marketing: false,
-    }), { expires: 365, sameSite: 'Lax' });
-    closeBanner();
-  };
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('consent', 'update', {
+      ad_storage: 'granted',
+      analytics_storage: 'granted',
+    });
+  }
+
+  closeBanner();
+};
+
+
+ const refuseCookies = () => {
+  Cookies.set('cookie_consent', 'refused', { expires: 365, sameSite: 'Lax' });
+  Cookies.set('cookie_preferences', JSON.stringify({
+    functional: true,
+    statistics: false,
+    marketing: false,
+  }), { expires: 365, sameSite: 'Lax' });
+
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('consent', 'update', {
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+    });
+  }
+
+  closeBanner();
+};
+
 
   const openPreferences = () => {
     setShowPreferences(true);
@@ -84,6 +108,12 @@ export default function CookieBanner() {
                 className="bg-transparent hover:bg-indigo-800 text-indigo-200 hover:text-white px-4 py-2 rounded-md border border-indigo-400 transition-colors duration-300 text-sm font-medium"
               >
                 Tout refuser
+              </button>
+               <button
+                onClick={openPreferences}
+                className="bg-indigo-700 hover:bg-indigo-600 text-white px-4 py-2 rounded-md transition-colors duration-300 text-sm font-medium"
+              >
+                Paramétrer
               </button>
              
               <button
