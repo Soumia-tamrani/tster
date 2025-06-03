@@ -72,7 +72,7 @@ const professionalLeadSchema = z.object({
   phone: z
     .string()
     .min(1, "Le numéro de téléphone est requis")
-    .refine((phone) => /^\+?[0-9\s-]{6,}$/.test(phone), { 
+    .refine((phone) => /^\+?[0-9\s-]{6,}$/.test(phone), {
       message: "Numéro de téléphone invalide",
     }),
   city: z.string().optional().default(""),
@@ -360,7 +360,7 @@ export async function registerProfessional(formData: FormData) {
     };
 
     console.log("Parsed data before validation:", rawData);
-    
+    // salma
     if (rawData.parrainId === "") {
       rawData.parrainId = null;
     }
@@ -393,9 +393,12 @@ export async function registerProfessional(formData: FormData) {
       });
       if (parrainUser) {
         parrainUserId = parrainUser.id;
-        console.log(" Parrain trouvé avec ID :", parrainUserId);
+        console.log("✅ Parrain trouvé avec ID :", parrainUserId);
       } else {
-        console.warn(" Aucun parrain trouvé pour l'ID :", validated.parrainId);
+        console.warn(
+          "⚠️ Aucun parrain trouvé pour l'ID :",
+          validated.parrainId
+        );
       }
     }
 
@@ -415,10 +418,12 @@ export async function registerProfessional(formData: FormData) {
           city: validated.city,
           country: validated.country,
           sector: validated.sector as any,
-          parrain: parrainUserId && parrainUserId.trim() !== ""
-            ? { connect: { id: parrainUserId } }
-            : undefined,
-          referralSource: validated.referralSource as ReferralSource,
+          subscribedToNewsletter: validated.subscribedToNewsletter,
+          parrain:
+            parrainUserId && parrainUserId.trim() !== ""
+              ? { connect: { id: parrainUserId } }
+              : undefined,
+          referralSource: validated.referralSource || null,
           utmSource: validated.utmSource || null,
           utmMedium: validated.utmMedium || null,
           utmCampaign: validated.utmCampaign || null,
@@ -463,9 +468,11 @@ export async function registerProfessional(formData: FormData) {
           utmCampaign: validated.utmCampaign || null,
           registrationDate: new Date(),
           ipAddress: "127.0.0.1",
+          emailVerified: validated.emailVerified,
           parrain: parrainUserId
             ? { connect: { id: parrainUserId } }
             : undefined,
+
           professionalDetails: {
             create: {
               professionalInterests: professionalInterestsArray.length > 0 ? professionalInterestsArray : undefined,
