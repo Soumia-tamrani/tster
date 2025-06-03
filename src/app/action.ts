@@ -1,6 +1,6 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ReferralSource } from "@prisma/client";
 import { z } from "zod";
 
 const prisma = new PrismaClient();
@@ -58,7 +58,13 @@ enum TypeContrat {
   FREELANCE = "FREELANCE",
   AUTRE = "AUTRE",
 }
-
+const ProfessionalInterestEnum = z.enum([
+  'MENTORAT',
+  'RESEAUTAGE', 
+  'EMPLOI',
+  'FORMATION',
+  'AUTRE'
+]);
 const professionalLeadSchema = z.object({
   firstName: z.string().min(1, "Le prénom est requis"),
   lastName: z.string().min(1, "Le nom est requis"),
@@ -66,19 +72,24 @@ const professionalLeadSchema = z.object({
   phone: z
     .string()
     .min(1, "Le numéro de téléphone est requis")
-    .refine((phone) => /^\+?[0-9\s-]{6,}$/.test(phone), { 
+    .refine((phone) => /^\+?[0-9\s-]{6,}$/.test(phone), {
       message: "Numéro de téléphone invalide",
     }),
   city: z.string().optional().default(""),
   country: z.string().min(1, "Le pays est requis"),
   sector: z.nativeEnum(Secteur),
-  professionalInterests: z
-    .array(z.nativeEnum(ProfessionalInterest))
-    .optional()
-    .default([]),
-  professionalChallenges: z.string().optional().default(""),
-  subscribedToNewsletter: z.boolean().default(false),
-  referralSource: z.string().optional().default(""),
+  professionalInterests: z.array(ProfessionalInterestEnum).optional().default([]),
+
+referralSource: z
+  .enum([
+    "RECHERCHE_EN_LIGNE", 
+    "RESEAUX_SOCIAUX",
+    "PUBLICITE",
+    "AUTRE",
+    "RECOMMANDATION"
+  ])
+  .optional()
+  .nullable(),
   utmSource: z.string().optional().nullable(),
   utmMedium: z.string().optional().nullable(),
   utmCampaign: z.string().optional().nullable(),
@@ -91,7 +102,7 @@ const businessLeadSchema = z.object({
   firstName: z.string().min(1, "Le prénom est requis"),
   lastName: z.string().min(1, "Le nom est requis"),
   email: z.string().email("Email invalide"),
-  parrainId: z.string().optional().nullable(), //,mdfb
+  parrainId: z.string().optional().nullable(), 
   phone: z
     .string()
     .min(1, "Le numéro de téléphone est requis")
@@ -103,7 +114,7 @@ const businessLeadSchema = z.object({
   companyName: z.string().min(1, "Le nom de l'entreprise est requis"),
   companySize: z.enum(["STARTUP", "PME", "GRANDE_ENTREPRISE"]),
   sector: z.nativeEnum(Secteur),
-  mainNeed: z.string().min(1, "Le besoin principal est requis"),
+  mainNeed: z.string().optional(),
   otherSector: z.string().optional(),
   companyNeeds: z
     .array(
@@ -125,7 +136,7 @@ const businessLeadSchema = z.object({
   companyWebsite: z.string().optional(),
   companyFoundingYear: z.string().optional(),
   subscribedToNewsletter: z.boolean().default(false),
-  referralSource: z.string().optional(),
+  referralSource: z.enum(["RECHERCHE_EN_LIGNE", "RESEAUX_SOCIAUX","PUBLICITE","AUTRE", "RECOMMANDATION"]).optional().nullable(),
   utmSource: z.string().optional().nullable(),
   utmMedium: z.string().optional().nullable(),
   utmCampaign: z.string().optional().nullable(),
@@ -159,6 +170,8 @@ async function checkUniqueEmailAndPhone(email: string, phone: string) {
 
 export async function registerBusiness(formData: FormData) {
   try {
+    const rawReferralSource = formData.get("referralSource");
+
     const rawData = {
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
@@ -178,15 +191,15 @@ export async function registerBusiness(formData: FormData) {
       companyFoundingYear: formData.get("companyFoundingYear") as string | null,
       subscribedToNewsletter: formData.get("subscribedToNewsletter") === "true",
       parrainId: formData.get("parrainId") as string | null,
-      referralSource: formData.get("referralSource") as string | null, //salma
+      referralSource: (formData.get("referralSource") || null) as ReferralSource | null,
       utmSource: formData.get("utmSource") as string | null,
       utmMedium: formData.get("utmMedium") as string | null,
       utmCampaign: formData.get("utmCampaign") as string | null,
       emailVerified: formData.get("emailVerified") === "true",
     };
-    // salma
+    
     if (rawData.parrainId && !rawData.referralSource) {
-      rawData.referralSource = "FRIEND";
+      rawData.referralSource = "RECOMMANDATION";
     }
 
     console.log("Raw form data:", rawData);
@@ -222,7 +235,7 @@ export async function registerBusiness(formData: FormData) {
           country: validated.country,
           sector: validated.sector as any,
           subscribedToNewsletter: validated.subscribedToNewsletter,
-          referralSource: validated.referralSource || null,
+          referralSource: validated.referralSource as ReferralSource | null,
           utmSource: validated.utmSource || null,
           utmMedium: validated.utmMedium || null,
           utmCampaign: validated.utmCampaign || null,
@@ -234,9 +247,7 @@ export async function registerBusiness(formData: FormData) {
                 companySize: validated.companySize as any,
                 companyNeeds: validated.companyNeeds as any[],
                 companyChallenges: validated.companyChallenges || null,
-                companyDescription: validated.companyDescription || null,
                 companyWebsite: validated.companyWebsite || null,
-                companyFoundingYear: validated.companyFoundingYear || null,
                 mainNeed: validated.mainNeed || null,
                 otherSector: validated.otherSector || null,
                 city: validated.city,
@@ -247,9 +258,7 @@ export async function registerBusiness(formData: FormData) {
                 companySize: validated.companySize as any,
                 companyNeeds: validated.companyNeeds as any[],
                 companyChallenges: validated.companyChallenges || null,
-                companyDescription: validated.companyDescription || null,
                 companyWebsite: validated.companyWebsite || null,
-                companyFoundingYear: validated.companyFoundingYear || null,
                 mainNeed: validated.mainNeed || null,
                 otherSector: validated.otherSector || null,
                 city: validated.city,
@@ -277,9 +286,10 @@ export async function registerBusiness(formData: FormData) {
           sector: validated.sector as any,
           subscribedToNewsletter: validated.subscribedToNewsletter,
           registeredForTrial: true,
-          parrainId: validated.parrainId || null, //mdfb
-          referralSource: validated.referralSource || null,
-          utmSource: validated.utmSource || null,
+          parrainId: validated.parrainId || null, 
+          referralSource: rawReferralSource && rawReferralSource !== "" 
+  ? (rawReferralSource as ReferralSource) 
+  : null,          utmSource: validated.utmSource || null,
           utmMedium: validated.utmMedium || null,
           utmCampaign: validated.utmCampaign || null,
           registrationDate: new Date(),
@@ -291,9 +301,7 @@ export async function registerBusiness(formData: FormData) {
               companySize: validated.companySize as any,
               companyNeeds: validated.companyNeeds as any[],
               companyChallenges: validated.companyChallenges || null,
-              companyDescription: validated.companyDescription || null,
               companyWebsite: validated.companyWebsite || null,
-              companyFoundingYear: validated.companyFoundingYear || null,
               mainNeed: validated.mainNeed || null,
               otherSector: validated.otherSector || null,
               city: validated.city,
@@ -328,8 +336,9 @@ export async function registerBusiness(formData: FormData) {
 export async function registerProfessional(formData: FormData) {
   try {
     console.log("Form data received:", Object.fromEntries(formData.entries()));
+    
     const professionalInterests = formData.getAll("professionalInterests");
-
+    
     const rawData = {
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
@@ -338,11 +347,10 @@ export async function registerProfessional(formData: FormData) {
       city: (formData.get("city") as string) || "",
       country: formData.get("country") as string,
       sector: formData.get("sector") as string,
-      professionalInterests: professionalInterests as string[],
-      professionalChallenges:
-        (formData.get("professionalChallenges") as string) || "",
+      professionalInterests: professionalInterests,
+      professionalChallenges: (formData.get("professionalChallenges") as string) || "",
       subscribedToNewsletter: formData.get("subscribedToNewsletter") === "true",
-      referralSource: (formData.get("referralSource") as string) || "",
+      referralSource: formData.get("referralSource") as ReferralSource || null,
       utmSource: (formData.get("utmSource") as string) || null,
       utmMedium: (formData.get("utmMedium") as string) || null,
       utmCampaign: (formData.get("utmCampaign") as string) || null,
@@ -353,17 +361,14 @@ export async function registerProfessional(formData: FormData) {
 
     console.log("Parsed data before validation:", rawData);
     // salma
-   if (rawData.parrainId === "") {
-  rawData.parrainId = null;
-}
-
+    if (rawData.parrainId === "") {
+      rawData.parrainId = null;
+    }
 
     const validated = professionalLeadSchema.parse(rawData);
     console.log("Validation successful:", validated);
-    // ajout salma : vérification que l'ID du parrain existe
-    let parrainUserId: string | null = null;
-
     
+    let parrainUserId: string | null = null;
 
     const existingUser = await prisma.user.findUnique({
       where: { Email: validated.email },
@@ -388,11 +393,20 @@ export async function registerProfessional(formData: FormData) {
       });
       if (parrainUser) {
         parrainUserId = parrainUser.id;
-         console.log("✅ Parrain trouvé avec ID :", parrainUserId);
-  } else {
-    console.warn("⚠️ Aucun parrain trouvé pour l'ID :", validated.parrainId);
+        console.log("✅ Parrain trouvé avec ID :", parrainUserId);
+      } else {
+        console.warn(
+          "⚠️ Aucun parrain trouvé pour l'ID :",
+          validated.parrainId
+        );
       }
     }
+
+    const professionalInterestsArray = Array.isArray(validated.professionalInterests) 
+      ? validated.professionalInterests.filter(Boolean) 
+      : validated.professionalInterests 
+        ? [validated.professionalInterests] 
+        : []; 
 
     if (existingUser) {
       const user = await prisma.user.update({
@@ -404,10 +418,10 @@ export async function registerProfessional(formData: FormData) {
           city: validated.city,
           country: validated.country,
           sector: validated.sector as any,
-          subscribedToNewsletter: validated.subscribedToNewsletter,
-parrain: parrainUserId && parrainUserId.trim() !== ""
-  ? { connect: { id: parrainUserId } }
-  : undefined,
+          parrain:
+            parrainUserId && parrainUserId.trim() !== ""
+              ? { connect: { id: parrainUserId } }
+              : undefined,
           referralSource: validated.referralSource || null,
           utmSource: validated.utmSource || null,
           utmMedium: validated.utmMedium || null,
@@ -416,16 +430,12 @@ parrain: parrainUserId && parrainUserId.trim() !== ""
           professionalDetails: {
             upsert: {
               create: {
-                professionalInterests: validated.professionalInterests as any[],
-                professionalChallenges:
-                  validated.professionalChallenges || null,
+                professionalInterests: professionalInterestsArray.length > 0 ? professionalInterestsArray : undefined,
                 city: validated.city,
                 country: validated.country,
               },
               update: {
-                professionalInterests: validated.professionalInterests as any[],
-                professionalChallenges:
-                  validated.professionalChallenges || null,
+                professionalInterests: professionalInterestsArray.length > 0 ? professionalInterestsArray : undefined,
                 city: validated.city,
                 country: validated.country,
               },
@@ -448,31 +458,29 @@ parrain: parrainUserId && parrainUserId.trim() !== ""
           role: UserRole.PROFESSIONAL as any,
           city: validated.city,
           country: validated.country,
+          emailVerified: true,
           sector: validated.sector as any,
-          subscribedToNewsletter: validated.subscribedToNewsletter,
           registeredForTrial: true,
-          referralSource: validated.referralSource || null,
+          referralSource: validated.referralSource as ReferralSource,
           utmSource: validated.utmSource || null,
           utmMedium: validated.utmMedium || null,
           utmCampaign: validated.utmCampaign || null,
           registrationDate: new Date(),
           ipAddress: "127.0.0.1",
-          emailVerified: validated.emailVerified,
-parrain: parrainUserId
-  ? { connect: { id: parrainUserId } }
-  : undefined,
+          parrain: parrainUserId
+            ? { connect: { id: parrainUserId } }
+            : undefined,
 
           professionalDetails: {
             create: {
-              professionalInterests: validated.professionalInterests as any[],
-              professionalChallenges: validated.professionalChallenges || null,
+              professionalInterests: professionalInterestsArray.length > 0 ? professionalInterestsArray : undefined,
               city: validated.city,
               country: validated.country,
             },
           },
         },
       });
-      return {
+      return {  
         success: true,
         user,
         redirectTo: `/register/success?userId=${user.id}`,
@@ -482,8 +490,7 @@ parrain: parrainUserId
     if (error instanceof z.ZodError) {
       console.error("Validation errors:", error.errors);
       return {
-        error:
-          "Validation failed: " +
+        error: "Validation failed: " +
           error.errors
             .map((e) => `${e.path.join(".")}: ${e.message}`)
             .join(", "),

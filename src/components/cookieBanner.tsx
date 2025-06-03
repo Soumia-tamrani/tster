@@ -1,15 +1,14 @@
-'use client';
+"use client";
 declare global {
   interface Window {
     gtag: (...args: any[]) => void;
   }
 }
 
-
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Cookies from 'js-cookie';
-import CookieModal from './cookieModal'; // Assure-toi que le chemin est correct
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Cookies from "js-cookie";
+import CookieModal from "./cookieModal";
 
 export default function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
@@ -17,50 +16,59 @@ export default function CookieBanner() {
   const [showPreferences, setShowPreferences] = useState(false);
 
   useEffect(() => {
-    const consent = Cookies.get('cookie_consent');
-    if (!consent || (consent !== 'accepted' && consent !== 'refused')) {
+    const consent = Cookies.get("cookie_consent");
+    if (!consent || (consent !== "accepted" && consent !== "refused")) {
       setShowBanner(true);
       setTimeout(() => setVisible(true), 100);
     }
   }, []);
 
   const acceptCookies = () => {
-  Cookies.set('cookie_consent', 'accepted', { expires: 365, sameSite: 'Lax' });
-  Cookies.set('cookie_preferences', JSON.stringify({
-    functional: true,
-    statistics: true,
-    marketing: true,
-  }), { expires: 365, sameSite: 'Lax' });
-
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('consent', 'update', {
-      ad_storage: 'granted',
-      analytics_storage: 'granted',
+    Cookies.set("cookie_consent", "accepted", {
+      expires: 365,
+      sameSite: "Lax",
     });
-  }
+    Cookies.set(
+      "cookie_preferences",
+      JSON.stringify({
+        functional: true,
+        statistics: true,
+        marketing: true,
+      }),
+      { expires: 365, sameSite: "Lax" }
+    );
 
-  closeBanner();
-};
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      window.gtag("consent", "update", {
+        ad_storage: "granted",
+        analytics_storage: "granted",
+      });
+    }
 
+    closeBanner();
+  };
 
- const refuseCookies = () => {
-  Cookies.set('cookie_consent', 'refused', { expires: 365, sameSite: 'Lax' });
-  Cookies.set('cookie_preferences', JSON.stringify({
-    functional: true,
-    statistics: false,
-    marketing: false,
-  }), { expires: 365, sameSite: 'Lax' });
+  const refuseCookies = () => {
+    Cookies.set("cookie_consent", "refused", { expires: 365, sameSite: "Lax" });
+    Cookies.set(
+      "cookie_preferences",
+      JSON.stringify({
+        functional: true,
+        statistics: false,
+        marketing: false,
+      }),
+      { expires: 365, sameSite: "Lax" }
+    );
 
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('consent', 'update', {
-      ad_storage: 'denied',
-      analytics_storage: 'denied',
-    });
-  }
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      window.gtag("consent", "update", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+      });
+    }
 
-  closeBanner();
-};
-
+    closeBanner();
+  };
 
   const openPreferences = () => {
     setShowPreferences(true);
@@ -82,47 +90,35 @@ export default function CookieBanner() {
     <>
       {showPreferences && <CookieModal onClose={handlePreferencesSaved} />}
 
-      <div
-        className={`fixed bottom-0 w-full z-50 transition-all duration-500 transform ${
-          visible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-        }`}
-      >
-        <div className="bg-indigo-900 text-white p-6 shadow-xl border-t-2 border-indigo-400">
-          <div className="max-w-screen-lg mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-1">🍪 Gestion des cookies</h3>
-              <p className="text-sm text-indigo-100">
-                Nous utilisons des cookies pour améliorer votre expérience, mesurer l'audience 
-                et proposer des contenus personnalisés.{' '}
-                <Link
-                  href="/politique-de-confidentialite"
-                  className="underline text-indigo-200 hover:text-white transition-colors"
-                >
-                  En savoir plus
-                </Link>
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={refuseCookies}
-                className="bg-transparent hover:bg-indigo-800 text-indigo-200 hover:text-white px-4 py-2 rounded-md border border-indigo-400 transition-colors duration-300 text-sm font-medium"
-              >
-                Tout refuser
-              </button>
-               <button
-                onClick={openPreferences}
-                className="bg-indigo-700 hover:bg-indigo-600 text-white px-4 py-2 rounded-md transition-colors duration-300 text-sm font-medium"
-              >
-                Paramétrer
-              </button>
-             
-              <button
-                onClick={acceptCookies}
-                className="bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-md shadow-md transition-colors duration-300 text-sm font-medium"
-              >
-                Tout accepter
-              </button>
-            </div>
+      <div className="fixed bottom-6 left-6 z-50">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full flex flex-col items-center">
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">
+            🍪 Our website uses cookies
+          </h3>
+          <p className="text-gray-500 text-center mb-6">
+            Our website use cookies. By continuing, we assume your permission to
+            deploy cookies as detailed in our{" "}
+            <Link
+              href="/privacy-policy"
+              className="text-sky-400 hover:underline"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </p>
+          <div className="flex gap-4 w-full justify-center">
+            <button
+              onClick={acceptCookies}
+              className="bg-sky-400 hover:bg-sky-500 text-white px-8 py-3 rounded-full font-semibold text-base shadow transition-colors duration-200 w-1/2"
+            >
+              Accept all
+            </button>
+            <button
+              onClick={openPreferences}
+              className="bg-white border border-gray-200 text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold text-base transition-colors duration-200 w-1/2"
+            >
+              Manage
+            </button>
           </div>
         </div>
       </div>

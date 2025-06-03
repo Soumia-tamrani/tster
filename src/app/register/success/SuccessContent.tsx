@@ -1,19 +1,36 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ArrowLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import confetti from "canvas-confetti"; 
 
 export default function SuccessContent() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
   const inviteLink = `${process.env.NEXT_PUBLIC_BASE_URL}?ref=${userId}`;
 
+  // Fonction pour déclencher l'effet de confettis
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 100, 
+      spread: 70, 
+      origin: { y: 0.6 }, 
+      colors: ["#18D400", "#1CD5F5", "#013959"], 
+    });
+  };
+
+  useEffect(() => {
+    triggerConfetti();
+  }, []); 
+
   const handleCopy = useCallback(() => {
     if (inviteLink) {
       navigator.clipboard.writeText(inviteLink).then(() => {
-        alert("Lien copié !");
+      toast.success("Lien copié !");
       });
     }
   }, [inviteLink]);
@@ -57,13 +74,43 @@ export default function SuccessContent() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+
+     <div>
+      <ToastContainer />
+    <div className="  relative w-full h-[1705px] bg-[#FCFCFD] flex flex-col items-center mx-auto">
+      {/* Background Rectangle */}
+      <div className="absolute w-full h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
+      <a
+        href="/"
+        className="absolute z-20 top-[77px] left-[122px] w-[45px] h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
+      >
+        <ArrowLeft className="text-white" size={20} />
+      </a>
+
+      {/* Header Section on Blue Background */}
+      <div className="absolute w-[700px] h-[120px] top-[140px] left-[369px] flex flex-col items-center gap-6 z-10">
+        
         <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <CheckCircle className="h-12 w-12 text-green-600" />
+          <h1 className="text-4xl font-semibold mb-2 text-white">
+            Lorem ipsum dolor sit amet
+          </h1>
+          <p className="text-sm text-white">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl
+            nec tincidunt luctus, nunc erat sollicitudin ipsum.
+          </p>
+        </div>
+      </div>
+
+  <div 
+  className="bg-white rounded-[22px] mt-[300px] shadow-[0_44px_18px_rgba(171,171,171,0.01),0_25px_15px_rgba(171,171,171,0.03),0_11px_11px_rgba(171,171,171,0.05),0_3px_6px_rgba(171,171,171,0.06)] w-[1013px] h-[690px] p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border-[3px] border-rgba(215,215,219,0.74)">
+          <div className="px-1 pb-1 ">
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+      <div>
+        <div className="text-center">  
+          <div className="flex justify-center mb-4">
+          <CheckCircle className="text-[#18D400]" style={{ width: '75px', height: '90.75px' }} />
+          </div>
+          <h1 className="text-2xl font-bold text-[#013959] mb-2" style={{fontFamily: 'Montserrat, sans-serif', fontSize: '25px', fontWeight: '700'}}>
             Inscription réussie !
           </h1>
           <p className="text-gray-600 mb-6">
@@ -73,7 +120,9 @@ export default function SuccessContent() {
           </p>
 
           {/* Lien de parrainage */}
-          <div className="bg-gray-100 rounded-lg p-4 mb-4 text-left">
+          {/* <div className="bg-gray-100 rounded-lg p-4 mb-4 text-left ml-12 mr-15"> */}
+          <div className="bg-gray-100 rounded-lg p-4 mb-4 text-left" style={{ width: '700px' }}>
+
             <p className="text-sm font-medium text-gray-500 mb-1">
               Votre lien de parrainage :
             </p>
@@ -83,7 +132,7 @@ export default function SuccessContent() {
           {/* Bouton copier */}
           <button
             onClick={handleCopy}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition duration-300 mb-6"
+            className="w-full bg-[#1CD5F5] hover:bg-[#84daee] text-white font-medium py-3 px-4 rounded-lg transition duration-300 mb-8 " style={{fontFamily: 'Montserrat, sans-serif', fontSize: '17px', fontWeight: '500'}}
           >
             Copier le lien
           </button>
@@ -148,26 +197,12 @@ export default function SuccessContent() {
             </button>
           </div>
 
-          {/* Retour */}
-          <Button asChild className="w-full mb-4">
-            <Link href="/">Retour à l'accueil</Link>
-          </Button>
-
-          {/* Infos */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <h3 className="font-medium text-blue-800 mb-2">
-              Comment ça marche ?
-            </h3>
-            <ul className="text-sm text-blue-700 text-left list-disc pl-4 space-y-1">
-              <li>Partagez votre lien avec vos amis et votre réseau</li>
-              <li>
-                Vous recevez 500 points de fidélité pour chaque parrainage après
-                le lancement officiel
-              </li>
-            </ul>
-          </div>
+          
         </div>
       </div>
     </div>
+        </div>
+      </div>
+      
   );
 }
