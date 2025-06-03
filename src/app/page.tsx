@@ -50,7 +50,7 @@ export default function Home() {
     >
       {/* Header Section */}
       <header className="sticky top-0 z-50 w-full border-b border-blue-200 bg-white/95 dark:bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-gray-900/80 shadow-sm font-[Montserrat, sans-serif]">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-8">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8 flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <img
               src="/logo.png"
@@ -100,7 +100,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="w-full pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-white dark:from-gray-900 dark:to-gray-800">
-        <div className="container px-4 md:px-6">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             {/* Colonne de gauche : texte */}
             <div className="flex flex-col justify-center space-y-6 text-center lg:text-left">
@@ -174,7 +174,7 @@ export default function Home() {
         id="features"
         className="w-full py-12 sm:py-16 md:py-20 lg:py-24 bg-white dark:bg-gray-900"
       >
-        <div className="container px-4 md:px-8">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div
               className="inline-flex items-center rounded-full bg-white px-4 py-1 text-sm font-medium text-[#1CD5F5] border border-[#1CD5F5] animate-fade-in"
@@ -278,7 +278,7 @@ export default function Home() {
         id="benefits"
         className="w-full py-12 sm:py-16 md:py-20 lg:py-24 bg-white"
       >
-        <div className="container px-4 md:px-6">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div
               className="inline-flex items-center rounded-full bg-white px-4 py-1 text-sm font-medium text-[#1CD5F5] border border-[#1CD5F5] animate-fade-in"
@@ -380,7 +380,7 @@ export default function Home() {
         id="faq"
         className="w-full py-12 sm:py-16 md:py-20 lg:py-24 bg-white dark:bg-gray-900"
       >
-        <div className="container px-4 md:px-6">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div
               className="inline-flex items-center rounded-full bg-white px-4 py-1 text-sm font-medium text-[#1CD5F5] border border-[#1CD5F5] animate-fade-in"
@@ -462,13 +462,11 @@ export default function Home() {
       </section>
 
       {/* Newsletter Section */}
-      <div>
-        <NewsletterSection />
-      </div>
+      <NewsletterSection />
 
       {/* Footer */}
-      <footer className="border-t border-blue-100 dark:border-gray-800 py-8 sm:py-12 bg-[#013959] dark:bg-gray-900">
-        <div className="container px-4 md:px-6">
+      <footer className="w-full border-t border-blue-100 dark:border-gray-800 py-8 sm:py-12 bg-[#013959] dark:bg-gray-900">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
