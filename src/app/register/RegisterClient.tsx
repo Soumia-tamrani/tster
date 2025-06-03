@@ -15,9 +15,9 @@ export default function RegisterPage() {
   ];
 
   return (
-    <div className="relative w-[1440px] h-[1705px] bg-[#FCFCFD] flex flex-col items-center mx-auto">
+    <div className="  relative w-full h-[1705px] bg-[#FCFCFD] flex flex-col items-center mx-auto">
       {/* Background Rectangle */}
-      <div className="absolute w-[1550px] h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
+      <div className="absolute w-full h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
       <a
         href="/"
         className="absolute z-20 top-[77px] left-[122px] w-[45px] h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
@@ -27,15 +27,7 @@ export default function RegisterPage() {
 
       {/* Header Section on Blue Background */}
       <div className="absolute w-[700px] h-[120px] top-[140px] left-[369px] flex flex-col items-center gap-6 z-10">
-        {activeTab && (
-          <button
-            className="absolute top-[-90px] left-[-290px] flex items-center text-white hover:underline"
-            onClick={() => setActiveTab(null)}
-          >
-            <ArrowLeft className="mr-2" size={16} />
-            Retour
-          </button>
-        )}
+        
         <div className="text-center">
           <h1 className="text-4xl font-semibold mb-2 text-white">
             Lorem ipsum dolor sit amet
@@ -109,7 +101,8 @@ export default function RegisterPage() {
         </div>
       ) : activeTab === "professional" ? (
         // Personalized Main Card Container for ProfessionalForm
-        <div className="bg-white rounded-[15px] mt-[300px] shadow-[0_20px_15px_rgba(171,171,171,0.05)] w-[1013px] h-[850px] p-[50px] flex flex-col items-center text-[#013959] relative z-10 border-[2px] border-[#D7D7DBBD]">
+        <div>
+        {/* // className="bg-white rounded-[15px] mt-[300px] shadow-[0_20px_15px_rgba(171,171,171,0.05)] w-[1013px] h-[850px] p-[50px] flex flex-col items-center text-[#013959] relative z-10 border-[2px] border-[#D7D7DBBD]"> */}
           <ProfessionalForm />
         </div>
       ) : (
