@@ -418,7 +418,6 @@ export async function registerProfessional(formData: FormData) {
           city: validated.city,
           country: validated.country,
           sector: validated.sector as any,
-          subscribedToNewsletter: validated.subscribedToNewsletter,
           parrain:
             parrainUserId && parrainUserId.trim() !== ""
               ? { connect: { id: parrainUserId } }
@@ -468,7 +467,6 @@ export async function registerProfessional(formData: FormData) {
           utmCampaign: validated.utmCampaign || null,
           registrationDate: new Date(),
           ipAddress: "127.0.0.1",
-          emailVerified: validated.emailVerified,
           parrain: parrainUserId
             ? { connect: { id: parrainUserId } }
             : undefined,
@@ -482,7 +480,7 @@ export async function registerProfessional(formData: FormData) {
           },
         },
       });
-      return {
+      return {  
         success: true,
         user,
         redirectTo: `/register/success?userId=${user.id}`,
