@@ -295,16 +295,47 @@ export default function ProfessionalForm({
     }
   }
 
-  const handleContinue = async () => {
-    try {
-      setIsCheckingEmail(true)
-      const verificationToken = Math.floor(100000 + Math.random() * 900000).toString()
-      sessionStorage.setItem(`verification_${formData.email}`, verificationToken)
+useEffect(() => {
+  const allFieldsFilled = requiredFields.every(
+    (field) => formData[field as keyof typeof formData]
+  );
+  const noErrors = Object.keys(errors).length === 0;
+  setIsStep1Valid(allFieldsFilled && noErrors);
+}, [formData, errors]);
 
-      const emailContent = {
-        to: formData.email,
-        subject: "Vérification de votre adresse email",
-        html: `
+const handleContinue = async (event: React.MouseEvent<HTMLButtonElement>) =>  {
+  event.preventDefault();
+  event.stopPropagation();
+
+  console.log("handleContinue called with step:", step);
+
+  const isValid = await validateStep(1);
+  if (!isValid) {
+    toast.error("Erreur de validation", {
+      description: "Veuillez corriger les champs marqués en rouge avant de continuer",
+    });
+    return;
+  }
+
+  // Check email and phone uniqueness
+  const isEmailValid = formData.email ? await checkUnique("email", formData.email) : false;
+  const isPhoneValid = await handlePhoneBlur();
+
+  if (!isEmailValid || !isPhoneValid) {
+    toast.error("Erreur de validation", {
+      description: "Veuillez vérifier que l'email et le numéro de téléphone sont uniques",
+    });
+    return;
+  }
+
+  try {
+    const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem(`verification_${formData.email}`, verificationToken);
+
+    const emailContent = {
+      to: formData.email,
+      subject: "Vérification de votre adresse email",
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #2563eb;">Vérification de votre adresse email</h2>
           <p>Merci de votre inscription ! Voici votre code :</p>
@@ -314,27 +345,25 @@ export default function ProfessionalForm({
           <p>Ce code est valable pendant 10 minutes.</p>
         </div>
       `,
-      }
+    };
 
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(emailContent),
-      })
-      setSuccess("Code de vérification envoyé à votre adresse email")
+    const response = await fetch("/api/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(emailContent),
+    });
 
-      if (!response.ok) throw new Error("Échec de l'envoi du code")
+    if (!response.ok) throw new Error("Échec de l'envoi du code");
 
-      setStep(2)
-    } catch (error) {
-      console.error("Erreur :", error)
-      toast.error("Erreur lors de l'envoi de l'email de vérification.")
-    } finally {
-      setIsCheckingEmail(false)
-    }
+    setSuccess("Code de vérification envoyé à votre adresse email");
+    setStep(2);
+  } catch (error) {
+    console.error("Erreur :", error);
+    toast.error("Erreur lors de l'envoi de l'email de vérification.");
   }
+};
 
   // Fonction pour gérer les changements du numéro de téléphone avec validation stricte par pays sélectionné
   const handlePhoneChange = (value?: string) => {
@@ -701,23 +730,15 @@ export default function ProfessionalForm({
       }, 0)
     }
   }
-  const requiredFields = ["firstName", "lastName", "email", "country", "phone"];
-  const isStep1Valid1 = () => {
-  // Check if all required fields are filled
+const requiredFields = ["firstName", "lastName", "email", "country", "phone"];
+// Use useEffect to update isStep1Valid state if needed
+useEffect(() => {
   const allFieldsFilled = requiredFields.every(
     (field) => formData[field as keyof typeof formData]
   );
-
-  // Check if there are no errors and no validation in progress
   const noErrors = Object.keys(errors).length === 0;
   const noValidationInProgress = !isCheckingEmail && !isCheckingPhone;
-
-  return allFieldsFilled && noErrors && noValidationInProgress;
-};
-
-// Use useEffect to update isStep1Valid state if needed
-useEffect(() => {
-  setIsStep1Valid(isStep1Valid1());
+  setIsStep1Valid(allFieldsFilled && noErrors && noValidationInProgress);
 }, [formData, errors, isCheckingEmail, isCheckingPhone]);
 
   // Obtenir le code pays actuel pour PhoneInput
@@ -950,6 +971,7 @@ return (
                               "bg-[#1CD5F5] cursor-not-allowed hover:bg-gray-300"
                                 )}
                 disabled={!isStep1Valid || isCheckingEmail || isCheckingPhone}
+
               >
                 {isCheckingEmail || isCheckingPhone ? (
                   <>
@@ -1144,7 +1166,7 @@ return (
                       <SelectItem value="EDUCATION">Éducation</SelectItem>
                       <SelectItem value="TOURISME">Tourisme</SelectItem>
                       <SelectItem value="MEDIA_DIVERTISSEMENT">Média & Divertissement</SelectItem>
-                      <SelectItem value="AUTRES">Autres</SelectItem>
+                      <SelectItem value="AUTRE">Autres</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -393,10 +393,10 @@ export async function registerProfessional(formData: FormData) {
       });
       if (parrainUser) {
         parrainUserId = parrainUser.id;
-        console.log("✅ Parrain trouvé avec ID :", parrainUserId);
+        console.log("Parrain trouvé avec ID :", parrainUserId);
       } else {
         console.warn(
-          "⚠️ Aucun parrain trouvé pour l'ID :",
+          "Aucun parrain trouvé pour l'ID :",
           validated.parrainId
         );
       }
