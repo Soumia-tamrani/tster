@@ -1,4 +1,10 @@
 'use client';
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 
 import { useState } from 'react';
 import Cookies from 'js-cookie';
@@ -14,11 +20,21 @@ export default function CookieModal({ onClose }: { onClose: () => void }) {
     setPreferences(prev => ({ ...prev, [category]: !prev[category as keyof typeof prev] }));
   };
 
-  const handleSavePreferences = () => {
-    Cookies.set('cookie_preferences', JSON.stringify(preferences), { expires: 365, sameSite: 'Lax' });
-    Cookies.set('cookie_consent', 'accepted', { expires: 365, sameSite: 'Lax' });
-    onClose();
-  };
+ const handleSavePreferences = () => {
+  Cookies.set('cookie_preferences', JSON.stringify(preferences), { expires: 365, sameSite: 'Lax' });
+  Cookies.set('cookie_consent', 'accepted', { expires: 365, sameSite: 'Lax' });
+
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('consent', 'update', {
+      ad_storage: preferences.marketing ? 'granted' : 'denied',
+      analytics_storage: preferences.statistics ? 'granted' : 'denied',
+    });
+  }
+
+  onClose();
+};
+
+  
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
@@ -70,4 +86,4 @@ export default function CookieModal({ onClose }: { onClose: () => void }) {
       </div>
     </div>
   );
-}
+} 

@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner" // Import du nouveau composant Sonner
 import "./globals.css"
+import Script from "next/script"
 
 <Toaster position="top-right" /> //////////////
 
@@ -31,6 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* 👉 Balise Google tag ici */}
+  
+ 
         {children}
         <Toaster
           position="top-right"
