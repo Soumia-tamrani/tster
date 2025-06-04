@@ -106,7 +106,7 @@ export default function ProfessionalForm({
     if (defaultCountry) {
       setFormData((prev) => ({
         ...prev,
-        country: defaultCountry.name,
+        country: defaultCountry.name,    
         selectedCountryCode: defaultCountry.code,
         phone: "", 
       }))
