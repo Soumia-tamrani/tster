@@ -1,12 +1,15 @@
 "use client";
 
-import ProfessionalForm from "@/components/professional-form";
+import BusinessForm from "@/components/business-form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { Suspense } from "react";
+import { useState, Suspense } from "react"; 
+import { motion } from "framer-motion";
 
 // Fallback component for Suspense
-function ProfessionalRegisterPageFallback() {
+function BusinessRegisterPageFallback() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <p>Loading...</p>
@@ -14,13 +17,30 @@ function ProfessionalRegisterPageFallback() {
   );
 }
 
-// Main component content
-function ProfessionalRegisterPageContent() {
+// Main component wrapped in Suspense
+function BusinessRegisterPageContent() {
   const searchParams = useSearchParams();
   const parrainId = searchParams.get("ref") || "";
   const utmSource = "";
   const utmMedium = "";
   const utmCampaign = "";
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const onStepChange = (step: number) => {
+    setCurrentStep(step);
+  };
+
+  const getBusinessFormTitle = () => {
+    if (currentStep === 1) return "Informations personnelles";
+    if (currentStep === 2) return "Vérification email";
+    return "Profil entreprise";
+  };
+
+  const getBusinessFormDescription = () => {
+    if (currentStep === 1) return "Renseignez vos informations et celles de votre entreprise.";
+    if (currentStep === 2) return "Confirmez votre adresse email pour sécuriser votre compte.";
+    return "Complétez le profil de votre entreprise pour personnaliser votre expérience.";
+  };
 
   return (
     <div className="relative w-full min-h-screen bg-[#FCFCFD] flex flex-col items-center mx-auto">
@@ -52,10 +72,11 @@ function ProfessionalRegisterPageContent() {
 
       {/* Form Container - Responsive */}
       <div className="w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pt-48 sm:pt-52 md:pt-60 lg:pt-72 pb-8 sm:pb-12 md:pb-16">
-        <ProfessionalForm
+        <BusinessForm
           utmSource={utmSource}
           utmMedium={utmMedium}
           utmCampaign={utmCampaign}
+          onStepChange={onStepChange}
           parrainId={parrainId}
         />
       </div>
@@ -63,10 +84,10 @@ function ProfessionalRegisterPageContent() {
   );
 }
 
-export default function ProfessionalRegisterPage() {
+export default function BusinessRegisterPage() {
   return (
-    <Suspense fallback={<ProfessionalRegisterPageFallback />}>
-      <ProfessionalRegisterPageContent />
+    <Suspense fallback={<BusinessRegisterPageFallback />}>
+      <BusinessRegisterPageContent />
     </Suspense>
   );
 }

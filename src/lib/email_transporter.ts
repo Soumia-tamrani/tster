@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
-console.log('🚀 Entré dans email_transporter.ts');
+console.log(' Entré dans email_transporter.ts');
 
 let transporter: Transporter;
 console.log('SMTP CONFIG →', {

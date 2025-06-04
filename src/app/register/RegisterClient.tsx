@@ -15,24 +15,25 @@ export default function RegisterPage() {
   ];
 
   return (
-    <div className="  relative w-full h-[1705px] bg-[#FCFCFD] flex flex-col items-center mx-auto">
-      {/* Background Rectangle */}
-      <div className="absolute w-full h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
+    <div className="relative w-full min-h-screen bg-[#FCFCFD] flex flex-col items-center mx-auto">
+      {/* Background Rectangle - Responsive */}
+      <div className="absolute w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[563px] bg-[#013959] top-0 left-0 z-0" />
+      
+      {/* Back Button - Responsive positioning */}
       <a
         href="/"
-        className="absolute z-20 top-[77px] left-[122px] w-[45px] h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
+        className="absolute z-20 top-4 left-4 sm:top-6 sm:left-6 md:top-[77px] md:left-[60px] lg:left-[122px] w-[40px] h-[40px] sm:w-[45px] sm:h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
       >
-        <ArrowLeft className="text-white" size={20} />
+        <ArrowLeft className="text-white" size={18} />
       </a>
 
-      {/* Header Section on Blue Background */}
-      <div className="absolute w-[700px] h-[120px] top-[140px] left-[369px] flex flex-col items-center gap-6 z-10">
-        
+      {/* Header Section - Responsive */}
+      <div className="relative w-full max-w-[700px] px-4 sm:px-6 md:px-8 mt-16 sm:mt-20 md:mt-[140px] flex flex-col items-center gap-4 sm:gap-6 z-10">
         <div className="text-center">
-          <h1 className="text-4xl font-semibold mb-2 text-white">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2 text-white px-4">
             Lorem ipsum dolor sit amet
           </h1>
-          <p className="text-sm text-white">
+          <p className="text-xs sm:text-sm text-white px-4 leading-relaxed">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl
             nec tincidunt luctus, nunc erat sollicitudin ipsum.
           </p>
@@ -41,74 +42,94 @@ export default function RegisterPage() {
 
       {/* Conditional Rendering Based on activeTab */}
       {activeTab === null ? (
-        // Main Card Container for Selection Page
-        <div className="bg-white rounded-[22px] mt-[300px] shadow-[0_44px_18px_rgba(171,171,171,0.01),0_25px_15px_rgba(171,171,171,0.03),0_11px_11px_rgba(171,171,171,0.05),0_3px_6px_rgba(171,171,171,0.06)] w-[1013px] h-[799.44px] p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border-[3px] border-rgba(215,215,219,0.74)">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-semibold mb-2">
+        // Main Card Container - Fully Responsive
+        <div className="bg-white rounded-[16px] sm:rounded-[20px] md:rounded-[22px] mt-8 sm:mt-16 md:mt-20 lg:mt-[100px] mx-4 sm:mx-6 md:mx-8 shadow-[0_20px_25px_rgba(171,171,171,0.15)] w-full max-w-[1013px] p-4 sm:p-6 md:p-8 lg:p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border border-[rgba(215,215,219,0.74)] mb-8">
+          
+          {/* Header Text - Responsive */}
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-2 px-2">
               Lorem ipsum dolor sit amet
             </h2>
-            <p className="text-sm text-[#7E8B93]">
+            <p className="text-xs sm:text-sm text-[#7E8B93] px-4 leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod,
               nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
             </p>
           </div>
-
-          <div className="flex flex-col md:flex-row gap-10">
-            {/* Professionnel CARD */}
-            <div className="w-[426.79px] h-[462.44px] rounded-[29.73px] border-[1.92px] border-[#E0E0E0] p-[47px_38.36px] flex flex-col items-center text-center hover:shadow-lg transition">
-              <div className="w-[75.05px] h-[75.05px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-5">
-                <UserRound className="text-[#1CD5F5]" size={24} />
+          
+          {/* Cards Container - Responsive Layout */}
+          <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 md:gap-10 w-full max-w-[900px]">
+            
+            {/* Professionnel CARD - Responsive */}
+            <div className="flex-1 max-w-[426px] mx-auto lg:mx-0 rounded-[20px] sm:rounded-[25px] md:rounded-[29.73px] border border-[#E0E0E0] p-6 sm:p-8 md:p-[47px_38.36px] flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 hover:border-[#1CD5F5]/30">
+              
+              {/* Icon Container - Responsive */}
+              <div className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] md:w-[75.05px] md:h-[75.05px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-4 sm:mb-5">
+                <UserRound className="text-[#1CD5F5]" size={20} />
               </div>
-              <h3 className="text-2xl font-semibold mb-5"> Professionnel</h3>
-              <ul className="text-[#8C8C8C] space-y-[12px] mb-8">
+              
+              {/* Title - Responsive */}
+              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-5">
+                Professionnel
+              </h3>
+              
+              {/* Features List - Responsive */}
+              <ul className="text-[#8C8C8C] space-y-2 sm:space-y-3 mb-6 sm:mb-8 text-sm sm:text-base">
                 {features.map((feature, i) => (
-                  <li key={`pro-${i}`} className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2" size={12} />
-                    {feature}
+                  <li key={`pro-${i}`} className="flex items-center justify-start">
+                    <CheckCircle className="text-green-500 mr-2 flex-shrink-0" size={12} />
+                    <span className="text-left">{feature}</span>
                   </li>
                 ))}
               </ul>
+              
+              {/* Button - Responsive */}
               <button
-                className="w-[222px] h-[46.13px] bg-[#1CD5F5] text-white rounded-[73.18px] text-base font-semibold hover:bg-[#00b8e6] transition flex items-center justify-center"
+                className="w-full max-w-[222px] h-[42px] sm:h-[46.13px] bg-[#1CD5F5] text-white rounded-full text-sm sm:text-base font-semibold hover:bg-[#00b8e6] transition-colors duration-300 flex items-center justify-center"
                 onClick={() => setActiveTab("professional")}
               >
-                Get start
+                Get started
               </button>
             </div>
 
-            {/* Entreprise CARD */}
-            <div className="w-[410.84px] h-[455.37px] rounded-[28.62px] border-[1.85px] border-[#E0E0E0] p-[47px_36.93px] flex flex-col items-center text-center hover:shadow-lg transition">
-              <div className="w-[72.25px] h-[72.25px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-5">
-                <Building2 className="text-[#1CD5F5]" size={24} />
+            {/* Entreprise CARD - Responsive */}
+            <div className="flex-1 max-w-[426px] mx-auto lg:mx-0 rounded-[20px] sm:rounded-[25px] md:rounded-[28.62px] border border-[#E0E0E0] p-6 sm:p-8 md:p-[47px_36.93px] flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 hover:border-[#1CD5F5]/30">
+              
+              {/* Icon Container - Responsive */}
+              <div className="w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] md:w-[72.25px] md:h-[72.25px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-4 sm:mb-5">
+                <Building2 className="text-[#1CD5F5]" size={20} />
               </div>
-              <h3 className="text-2xl font-semibold mb-5">Entreprise</h3>
-              <ul className="text-[#8C8C8C] space-y-[12px] mb-8">
+              
+              {/* Title - Responsive */}
+              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-5">
+                Entreprise
+              </h3>
+              
+              {/* Features List - Responsive */}
+              <ul className="text-[#8C8C8C] space-y-2 sm:space-y-3 mb-6 sm:mb-8 text-sm sm:text-base">
                 {features.map((feature, i) => (
-                  <li key={`biz-${i}`} className="flex items-center">
-                    <CheckCircle className="text-green-500 mr-2" size={12} />
-                    {feature}
+                  <li key={`biz-${i}`} className="flex items-center justify-start">
+                    <CheckCircle className="text-green-500 mr-2 flex-shrink-0" size={12} />
+                    <span className="text-left">{feature}</span>
                   </li>
                 ))}
               </ul>
+              
+              {/* Button - Responsive */}
               <button
-                className="w-[222px] h-[46.13px] bg-[#1CD5F5] text-white rounded-[73.18px] text-base font-semibold hover:bg-[#00b8e6] transition flex items-center justify-center"
+                className="w-full max-w-[222px] h-[42px] sm:h-[46.13px] bg-[#1CD5F5] text-white rounded-full text-sm sm:text-base font-semibold hover:bg-[#00b8e6] transition-colors duration-300 flex items-center justify-center"
                 onClick={() => setActiveTab("business")}
               >
-                Get start
+                Get started
               </button>
             </div>
           </div>
         </div>
       ) : activeTab === "professional" ? (
-        // Personalized Main Card Container for ProfessionalForm
-        <div>
-        {/* // className="bg-white rounded-[15px] mt-[300px] shadow-[0_20px_15px_rgba(171,171,171,0.05)] w-[1013px] h-[850px] p-[50px] flex flex-col items-center text-[#013959] relative z-10 border-[2px] border-[#D7D7DBBD]"> */}
+        <div className="w-full">
           <ProfessionalForm />
         </div>
       ) : (
-        // Personalized Main Card Container for BusinessForm
-        <div> 
-        {/* // className="bg-white rounded-[25px] mt-[300px] shadow-[0_30px_20px_rgba(171,171,171,0.07)] w-[1013px] h-[1151.69px] p-[60px] flex flex-col items-center text-[#013959] relative z-10 border-[2px] border-[#D7D7DBBD]"> */}
+        <div className="w-full"> 
           <BusinessForm />
         </div>
       )}
