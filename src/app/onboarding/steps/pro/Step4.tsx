@@ -78,13 +78,6 @@ export default function ProStep4() {
             {copied ? <Check size={20} /> : <Copy size={20} />}
           </Button>
         </div>
-        <Button
-          onClick={handleShare}
-          className="w-full bg-[#1CD5F5] hover:bg-[#00b8e6] text-white"
-        >
-          <Share2 className="mr-2" size={20} />
-          Partager
-        </Button>
       </div>
     </div>
   );

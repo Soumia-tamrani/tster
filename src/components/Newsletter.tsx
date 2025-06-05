@@ -50,15 +50,14 @@ const NewsletterSection = () => {
         {/* Texte */}
         <div className="text-left w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#013959] dark:text-white">
-            S&apos;abonner à notre newsletter
+            Restez connecté(e)
           </h2>
           <p
             className="text-xs sm:text-sm md:text-base text-[#013959] dark:text-gray-300 mt-2"
             style={{ fontFamily: "Montserrat, sans-serif" }}
           >
-            Abonnez-vous pour recevoir les mises à jour : Restez informé des
-            dernières actualités pour les investisseurs, des résultats
-            financiers et des annonces en vous abonnant à notre newsletter.
+            Inscrivez-vous à notre newsletter pour recevoir nos actualités
+            exclusives en avant-première.
           </p>
         </div>
 
