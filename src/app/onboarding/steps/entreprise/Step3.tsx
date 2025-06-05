@@ -210,7 +210,12 @@ export default function EntrepriseStep3({
                 <FormItem>
                   <FormLabel>Besoin principal</FormLabel>
                   <FormControl>
-                    <Input {...field} className="h-12 w-full" />
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className="h-12 w-full"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -223,7 +228,12 @@ export default function EntrepriseStep3({
                 <FormItem>
                   <FormLabel>Site web d'entreprise.</FormLabel>
                   <FormControl>
-                    <Input {...field} className="h-12 w-full" />
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className="h-12 w-full"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
