@@ -211,8 +211,14 @@ export default function MultistepWrap({
               type="button"
               onClick={async () => {
                 setLoading(true);
-                if (onProceed) await onProceed();
-                else submitRef.current?.click();
+                try {
+                  if (onProceed) await onProceed();
+                  else submitRef.current?.click();
+                } catch (error) {
+                  console.error("Erreur lors de la soumission:", error);
+                } finally {
+                  setLoading(false);
+                }
               }}
               disabled={canProceed === false || loading}
               className="w-full md:w-[200px] h-12 md:h-[60px] bg-[#1CD5F5] text-white rounded-[12px] text-lg font-semibold flex items-center justify-center gap-2 hover:bg-[#00b8e6] transition disabled:opacity-50 disabled:cursor-not-allowed"

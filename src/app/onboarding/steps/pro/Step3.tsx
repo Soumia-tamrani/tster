@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   secteur: z.string().min(1, "Le secteur d'activité est requis."),
@@ -44,6 +45,10 @@ export default function ProStep3({
   setCanProceed?: (can: boolean) => void;
   setOnProceed?: (cb: () => void) => void;
 }) {
+  const [isSaving, setIsSaving] = useState(false);
+  const searchParams = useSearchParams();
+  const profileType = searchParams.get("profile");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -64,14 +69,52 @@ export default function ProStep3({
     if (setOnProceed) setOnProceed(() => form.handleSubmit(handleSubmit));
   }, [form.formState.isValid, setCanProceed, setOnProceed]);
 
-  const handleSubmit = (data: any) => {
-    // Save to localStorage
-    localStorage.setItem(
-      "onboardingFormData",
-      JSON.stringify({ ...(defaultValues || {}), ...data })
-    );
-    localStorage.setItem("onboardingCurrentStep", "2");
-    onNext(data);
+  const handleSubmit = async (data: any) => {
+    try {
+      setIsSaving(true);
+
+      // Get all form data from localStorage
+      const storageKey =
+        profileType === "entreprise"
+          ? "onboardingEntrepriseFormData"
+          : "onboardingFormData";
+
+      const allFormData = localStorage.getItem(storageKey);
+      if (!allFormData) {
+        throw new Error("No form data found");
+      }
+
+      const formData = JSON.parse(allFormData);
+
+      // Save to database
+      const response = await fetch("/api/onboarding/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          ...data,
+          profileType,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save data");
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        onNext(data);
+      } else {
+        throw new Error(result.error || "Failed to save data");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      // Handle error (show error message to user)
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -247,12 +290,14 @@ export default function ProStep3({
             </FormDescription>
           </div>
         </div>
-        <button
-          ref={submitRef}
+        <Button
           type="submit"
-          className="hidden"
-          aria-hidden="true"
-        ></button>
+          className="w-full bg-[#1CD5F5] hover:bg-[#00b8e6] text-white text-base font-semibold rounded-md h-12 mb-2"
+          disabled={isSaving}
+          ref={submitRef}
+        >
+          {isSaving ? "Enregistrement..." : "Terminer"}
+        </Button>
       </form>
     </Form>
   );

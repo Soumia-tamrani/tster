@@ -44,6 +44,7 @@ export default function ProStep2({
   const [resent, setResent] = useState(false);
   const [showSuccess, setShowSuccess] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const form = useForm<z.infer<typeof otpSchema>>({
     resolver: zodResolver(otpSchema),
     defaultValues: { otp: "" },
@@ -65,7 +66,16 @@ export default function ProStep2({
   }, [defaultValues]);
 
   const handleSubmit = (data: any) => {
-    setIsVerified(true);
+    // Retrieve the code from sessionStorage
+    const storedCode = sessionStorage.getItem(`verification_${email}`);
+    if (storedCode && data.otp === storedCode) {
+      setIsVerified(true);
+    } else {
+      form.setError("otp", {
+        type: "manual",
+        message: "Le code est incorrect. Veuillez réessayer.",
+      });
+    }
   };
 
   const sendVerificationEmail = async (email: string) => {
@@ -73,6 +83,7 @@ export default function ProStep2({
       const verificationToken = Math.floor(
         100000 + Math.random() * 900000
       ).toString();
+
       sessionStorage.setItem(`verification_${email}`, verificationToken);
       const emailContent = {
         to: email,
@@ -102,9 +113,20 @@ export default function ProStep2({
   };
 
   const handleResend = () => {
+    if (countdown > 0) return;
     setResent(true);
     setShowSuccess(true);
     if (email) sendVerificationEmail(email);
+    setCountdown(60);
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
     setTimeout(() => setResent(false), 3000);
     setTimeout(() => setShowSuccess(false), 2000);
   };
@@ -229,14 +251,17 @@ export default function ProStep2({
             </Button>
           )}
           {!isVerified && (
-            <button
-              type="button"
+            <Button
+              variant="link"
               className="block w-full text-[#1CD5F5] text-center text-base mt-2 hover:underline"
               onClick={handleResend}
+              disabled={countdown > 0}
               tabIndex={-1}
             >
-              Renvoyer le code
-            </button>
+              {countdown > 0
+                ? `Renvoyer le code (${countdown}s)`
+                : "Renvoyer le code"}
+            </Button>
           )}
         </div>
         <button

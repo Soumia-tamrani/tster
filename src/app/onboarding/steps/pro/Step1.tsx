@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,16 +14,20 @@ import {
   FormDescription,
   Form,
 } from "@/components/ui/form";
-import { CountryCombobox } from "@/components/CountryCombobox";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-number-input";
+import CountrySelector from "@/components/country-selector-pro";
+import { isValidPhoneForCountry, updatedCountriesList } from "@/lib/form-utils";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export const countries = [
-  { name: "Maroc", code: "+212" },
-  { name: "Mali", code: "+223" },
-  { name: "Malte", code: "+356" },
-  { name: "Martinique", code: "+596" },
-];
+
+const countries = updatedCountriesList.map((country) => ({
+  name: country.name,
+  code: country.code,
+  prefix: country.prefix,
+  flag: country.flag,
+}));
 
 const formSchema = z.object({
   firstName: z.string().min(3, "Le prénom est requis."),
@@ -50,6 +54,10 @@ export default function ProStep1({
   setCanProceed?: (can: boolean) => void;
   setOnProceed?: (cb: () => void) => void;
 }) {
+  const [selectedCountryCode, setSelectedCountryCode] = useState("MA");
+  const [isCheckingPhone, setIsCheckingPhone] = useState(false);
+  const [phoneErrors, setPhoneErrors] = useState<Record<string, string>>({});
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -63,23 +71,227 @@ export default function ProStep1({
     },
   });
 
+  const getCurrentCountryCode = (): string => {
+    return selectedCountryCode || "MA";
+  };
+
+  const handlePhoneBlur = async () => {
+    const phone = form.getValues("phone").trim();
+    if (!phone) {
+      setPhoneErrors({ phone: "Le numéro de téléphone est requis" });
+      return false;
+    }
+ 
+    const validation = validatePhoneFormat(phone, selectedCountryCode);
+    if (!validation.isValid) {
+      setPhoneErrors({ phone: validation.error || "Format invalide" });
+      return false;
+    }
+ 
+    setPhoneErrors({});
+    return true;
+  };
+ 
+  const getPhoneExample = (): string => {
+    const country = updatedCountriesList.find((c) => c.code === selectedCountryCode);
+    const limits = getPhoneLengthLimits(selectedCountryCode);
+ 
+    let lengthInfo = "";
+    if (limits.exactLength) {
+      lengthInfo = ` (exactement ${limits.exactLength} chiffres)`;
+    } else if (limits.min && limits.max) {
+      lengthInfo = ` (${limits.min}-${limits.max} chiffres)`;
+    }
+ 
+    const countryName = country?.name || "ce pays";
+    return `Format pour ${countryName}${lengthInfo}`;
+  };
+
+  const toE164Format = (phone: string): string => {
+    const cleaned = cleanPhoneNumber(phone);
+    if (!cleaned) return "";
+
+    if (phone.startsWith("+")) {
+      return "+" + cleaned;
+    }
+
+    return cleaned;
+  };
+
+  const handlePhoneChange = (value?: string) => {
+    const cleanValue = value ? toE164Format(value) : "";
+    form.setValue("phone", cleanValue);
+ 
+    if (cleanValue && cleanValue.length >= 3) {
+      const validation = validatePhoneFormat(cleanValue, selectedCountryCode);
+      if (!validation.isValid) {
+        setPhoneErrors({ phone: validation.error || "Format invalide" });
+      } else {
+        setPhoneErrors({});
+      }
+    } else {
+      setPhoneErrors({});
+    }
+  };
+
+  const handleCountryChange = (countryName: string) => {
+    const selected = countries.find((c) => c.name === countryName);
+    if (!selected) return;
+ 
+    setSelectedCountryCode(selected.code);
+    form.setValue("country", selected.name);
+    setPhoneErrors({});
+ 
+    const currentPhone = form.getValues("phone");
+    if (currentPhone) {
+      setTimeout(() => {
+        const validation = validatePhoneFormat(currentPhone, selected.code);
+        if (!validation.isValid) {
+          setPhoneErrors({ phone: validation.error || "Format invalide" });
+        }
+      }, 0);
+    }
+  };
+
+  const getPhoneLengthLimits = (countryCode: string): { exactLength?: number; min?: number; max?: number } => {
+    const limits: Record<string, { exactLength?: number; min?: number; max?: number }> = {
+      MA: { exactLength: 12 },
+      FR: { exactLength: 11 },
+      CA: { exactLength: 11 },
+      US: { exactLength: 11 },
+      ES: { exactLength: 11 },
+      IT: { exactLength: 12 },
+      BE: { exactLength: 11 },
+      CH: { exactLength: 11 },
+      DZ: { exactLength: 12 },
+      TN: { exactLength: 11 },
+      SN: { exactLength: 12 },
+      CI: { exactLength: 13 },
+      CM: { exactLength: 12 },
+      GB: { min: 13, max: 14 },
+      DE: { min: 12, max: 15 },
+    };
+    return limits[countryCode] || { min: 10, max: 15 };
+  };
+
+  const cleanPhoneNumber = (phone: string): string => {
+    if (!phone) return "";
+    return phone.replace(/\D/g, "");
+  };
+
+  const validatePhoneFormat = (phone: string, countryCode: string): { isValid: boolean; error?: string } => {
+    if (!phone) {
+      return { isValid: false, error: "Le numéro de téléphone est requis" };
+    }
+ 
+    const country = updatedCountriesList.find((c) => c.code === countryCode);
+    if (!country) {
+      return { isValid: false, error: "Pays non reconnu" };
+    }
+ 
+    const cleanPhone = cleanPhoneNumber(phone);
+    const limits = getPhoneLengthLimits(countryCode);
+ 
+    if (limits.exactLength) {
+      if (cleanPhone.length !== limits.exactLength) {
+        return { isValid: false, error: "Format invalide" };
+      }
+    } else if (limits.min && limits.max) {
+      if (cleanPhone.length < limits.min || cleanPhone.length > limits.max) {
+        return { isValid: false, error: "Format invalide" };
+      }
+    }
+ 
+    let phoneToValidate = phone;
+ 
+    if (!phoneToValidate.startsWith(country.prefix)) {
+      if (phoneToValidate.startsWith("0")) {
+        phoneToValidate = country.prefix + phoneToValidate.substring(1);
+      } else if (phoneToValidate.startsWith("+")) {
+        if (!phoneToValidate.startsWith(country.prefix)) {
+          return { isValid: false, error: "Format invalide pour " + country.name };
+        }
+      } else {
+        phoneToValidate = country.prefix + phoneToValidate;
+      }
+    }
+ 
+    const isValid = isValidPhoneForCountry(phoneToValidate, countryCode);
+ 
+    if (!isValid) {
+      return { isValid: false, error: "Format invalide pour " + country.name };
+    }
+ 
+    return { isValid: true };
+  };
+ 
   useEffect(() => {
-    form.reset(defaultValues);
+    const defaultCountry = countries.find((c) => c.name === "Maroc");
+    if (defaultCountry) {
+      setSelectedCountryCode(defaultCountry.code);
+      form.setValue("country", defaultCountry.name);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (defaultValues) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
+
+  useEffect(() => {
     if (setCanProceed) setCanProceed(form.formState.isValid);
     if (setOnProceed) setOnProceed(() => form.handleSubmit(handleSubmit));
-  }, [defaultValues, form.formState.isValid, setCanProceed, setOnProceed]);
+  }, [form.formState.isValid, setCanProceed, setOnProceed, form]);
 
   const handleSubmit = async (data: any) => {
-    localStorage.setItem(
-      "onboardingFormData",
-      JSON.stringify({
-        ...(defaultValues || {}),
-        ...data,
-      })
-    );
-    localStorage.setItem("onboardingCurrentStep", "0");
-    await sendVerificationEmail(data.email);
-    onNext(data);
+    try {
+      form.clearErrors("email");
+
+      const response = await fetch("/api/email/check-unique", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ field: "email", value: data.email }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log("API Response:", result);
+
+      if (!result.isUnique) {
+        console.log("Setting email error:", result.message);
+        form.setError("email", {
+          type: "manual",
+          message: result.message,
+        });
+        return;
+      }
+
+      const referrerEmail = localStorage.getItem("referrerEmail");
+      const referrerType = localStorage.getItem("referrerType");
+
+      localStorage.setItem(
+        "onboardingFormData",
+        JSON.stringify({
+          ...(defaultValues || {}),
+          ...data,
+          referrerEmail: referrerEmail || null,
+          referrerType: referrerType || null,
+        })
+      );
+      localStorage.setItem("onboardingCurrentStep", "0");
+      await sendVerificationEmail(data.email);
+      onNext(data);
+    } catch (error) {
+      console.error("Erreur lors de la vérification:", error);
+      form.setError("email", {
+        type: "manual",
+        message: "Une erreur est survenue lors de la vérification.",
+      });
+    }
   };
 
   const sendVerificationEmail = async (email: string) => {
@@ -175,6 +387,13 @@ export default function ProStep1({
                       {...field}
                       id="email"
                       type="email"
+                      onChange={(e) => {
+                        field.onChange(e);
+                        // Clear email errors when user starts typing
+                        if (form.formState.errors.email) {
+                          form.clearErrors("email");
+                        }
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -190,10 +409,11 @@ export default function ProStep1({
                     Pays <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
-                    <CountryCombobox
-                      className="h-12"
+                    <CountrySelector
                       value={field.value}
-                      onChange={field.onChange}
+                      onChange={handleCountryChange}
+                      onPrefixChange={() => {}}
+                      error={form.formState.errors.country?.message}
                       countries={countries}
                     />
                   </FormControl>
@@ -225,18 +445,42 @@ export default function ProStep1({
                     Téléphone <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
-                    <PhoneInput
-                      value={field.value}
-                      onChange={field.onChange}
-                      inputProps={{
-                        name: "phone",
-                        required: true,
-                        autoFocus: false,
-                      }}
-                      inputClass="w-full"
-                    />
+                    <div
+                      className={cn(
+                        "rounded-lg bg-white h-12 border relative",
+                        phoneErrors.phone || form.formState.errors.phone
+                          ? "border-red-500"
+                          : "border-gray-300 focus-within:border-blue-500"
+                      )}
+                    >
+                      <PhoneInput
+                        defaultCountry={getCurrentCountryCode() as any}
+                        value={field.value || undefined}
+                        onChange={handlePhoneChange}
+                        onBlur={handlePhoneBlur}
+                        className="w-full h-full border-none focus:outline-none focus:ring-0"
+                        international
+                        countryCallingCodeEditable={false}
+                        placeholder="Entrez votre numéro de téléphone"
+                      />
+                      {isCheckingPhone && (
+                        <div className="absolute right-3 top-3 pointer-events-none">
+                          <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                        </div>
+                      )}
+                    </div>
                   </FormControl>
-                  <FormMessage />
+                  {phoneErrors.phone || form.formState.errors.phone ? (
+                    <p className="text-red-500 text-xs flex items-center mt-1 animate-in fade-in">
+                      <AlertCircle className="mr-1 h-4 w-4" />
+                      {phoneErrors.phone ||
+                        form.formState.errors.phone?.message}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {getPhoneExample()}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />

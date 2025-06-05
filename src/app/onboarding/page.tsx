@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +29,24 @@ export default function OnboardingPage() {
       ? initialProfile
       : null
   );
+
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+    const type = searchParams.get("type");
+
+    if (ref) {
+      try {
+        const referrerEmail = atob(ref);
+        localStorage.setItem("referrerEmail", referrerEmail);
+        // Store the referrer's profile type
+        if (type) {
+          localStorage.setItem("referrerType", type);
+        }
+      } catch (error) {
+        console.error("Invalid referral code");
+      }
+    }
+  }, [searchParams]);
 
   // Uncomment when MultistepWrap is created
   if (selectedProfile) {

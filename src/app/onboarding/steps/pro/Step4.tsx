@@ -1,37 +1,124 @@
-import { CheckCircle } from "lucide-react";
+"use client";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Share2, Copy, Check, Users } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function ProStep4() {
+  const [referralLink, setReferralLink] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [referralCount, setReferralCount] = useState(0);
+  const searchParams = useSearchParams();
+  const profileType = searchParams.get("profile");
+
+  useEffect(() => {
+    const storageKey =
+      profileType === "entreprise"
+        ? "onboardingEntrepriseFormData"
+        : "onboardingFormData";
+
+    const userData = localStorage.getItem(storageKey);
+    if (userData) {
+      const { email } = JSON.parse(userData);
+      const link = `${window.location.origin}/onboarding?ref=${btoa(
+        email
+      )}&type=${profileType}`;
+      setReferralLink(link);
+
+      // Get referral count from the last API response
+      const lastResponse = localStorage.getItem("lastApiResponse");
+      if (lastResponse) {
+        const { referralCount } = JSON.parse(lastResponse);
+        setReferralCount(referralCount);
+      }
+
+      localStorage.removeItem("onboardingFormData");
+      localStorage.removeItem("onboardingEntrepriseFormData");
+      localStorage.removeItem("onboardingCurrentStep");
+      localStorage.removeItem("referrerEmail");
+      localStorage.removeItem("lastApiResponse");
+    }
+  }, [profileType]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Rejoignez CatchHub",
+          text: "Rejoignez-moi sur CatchHub, la plateforme de networking professionnel au Maroc!",
+          url: referralLink,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-[600px] py-16">
-      <CheckCircle className="text-green-500 mb-6" size={100} />
-      <h2 className="text-2xl md:text-3xl font-bold text-[#013959] mb-2 text-center">
-        Merci pour votre inscription !
+    <div className="max-w-2xl mx-auto text-center">
+      <h2 className="text-2xl font-semibold text-[#013959] mb-4">
+        Bienvenue sur CatchHub!
       </h2>
-      <p className="text-[#7E8B93] text-base text-center mb-8">
-        Vous êtes parmi les pionniers à découvrir Catchhub.
-        <br />
-        Le lancement officiel arrive cet été.
+      <p className="text-[#7E8B93] mb-8">
+        Partagez votre lien de parrainage et invitez vos contacts à rejoindre la
+        communauté.
       </p>
-      <div className="w-full max-w-2xl bg-[#F7F9FA] rounded-xl p-6 mb-8">
-        <div className="text-xs font-semibold text-[#013959] mb-2">
-          Invitez Des Contacts À Rejoindre Catchhub Et Développez Votre Réseau,
+
+      <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Users className="text-[#1CD5F5]" size={24} />
+          <span className="text-lg font-semibold">
+            {referralCount}{" "}
+            {referralCount === 1 ? "personne invitée" : "personnes invitées"}
+          </span>
         </div>
-        <a
-          href="#"
-          className="block text-[#1CD5F5] underline text-base font-medium break-words"
+
+        <p className="text-sm text-gray-600 mb-2">Votre lien de parrainage</p>
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            type="text"
+            value={referralLink}
+            readOnly
+            className="flex-1 p-2 border rounded-md bg-gray-50"
+          />
+          <Button
+            onClick={handleCopy}
+            variant="outline"
+            className="whitespace-nowrap"
+          >
+            {copied ? <Check size={20} /> : <Copy size={20} />}
+          </Button>
+        </div>
+
+        <Button
+          onClick={handleShare}
+          className="w-full bg-[#1CD5F5] hover:bg-[#00b8e6] text-white"
         >
-          Consectetur Adipiscing Elit, Sed Do Eiusmod Tempor Incididunt Ut
-          Labore Et Dolore Magna Aliqua. Ut Enim Ad Minim Veniam, Quis Nostrud
-        </a>
+          <Share2 className="mr-2" size={20} />
+          Partager
+        </Button>
       </div>
-      <button
-        className="w-full max-w-xl h-14 bg-[#1CD5F5] text-white rounded-[11px] text-lg font-semibold flex items-center justify-center gap-2 hover:bg-[#00b8e6] transition"
-        onClick={() =>
-          navigator.clipboard.writeText("https://catchhub.com/invite/123456")
-        }
-      >
-        Copier le lien
-      </button>
+
+      <div className="bg-[#F7F9FA] p-4 rounded-lg">
+        <h3 className="font-semibold text-[#013959] mb-2">
+          Avantages du parrainage
+        </h3>
+        <ul className="text-sm text-gray-600 space-y-2">
+          <li>• 1ère invitation : Accès premium pendant 1 mois</li>
+          <li>• 5 invitations : Accès premium pendant 3 mois</li>
+          <li>• 10 invitations : Accès premium pendant 6 mois</li>
+        </ul>
+      </div>
     </div>
   );
 }
