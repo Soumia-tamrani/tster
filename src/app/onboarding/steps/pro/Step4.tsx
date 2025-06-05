@@ -24,11 +24,11 @@ export default function ProStep4() {
       )}&type=${profileType}`;
       setReferralLink(link);
 
-      // Clear all onboarding related data
       localStorage.removeItem("onboardingFormData");
       localStorage.removeItem("onboardingEntrepriseFormData");
       localStorage.removeItem("onboardingCurrentStep");
       localStorage.removeItem("referrerEmail");
+      localStorage.removeItem("referrerType");
       localStorage.removeItem("lastApiResponse");
     }
   }, [profileType]);

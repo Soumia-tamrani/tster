@@ -84,6 +84,14 @@ export default function ProStep3({
       }
 
       const formData = JSON.parse(allFormData);
+      const referrerEmail = localStorage.getItem("referrerEmail");
+      console.log(
+        "all the data====>",
+        formData,
+        data,
+        profileType,
+        referrerEmail
+      );
 
       const response = await fetch("/api/onboarding/save", {
         method: "POST",
@@ -94,6 +102,7 @@ export default function ProStep3({
           ...formData,
           ...data,
           profileType,
+          referrerEmail: referrerEmail || null,
         }),
       });
 
@@ -109,7 +118,6 @@ export default function ProStep3({
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      // Handle error (show error message to user)
     } finally {
       setIsSaving(false);
     }

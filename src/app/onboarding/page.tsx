@@ -38,7 +38,6 @@ export default function OnboardingPage() {
       try {
         const referrerEmail = atob(ref);
         localStorage.setItem("referrerEmail", referrerEmail);
-        // Store the referrer's profile type
         if (type) {
           localStorage.setItem("referrerType", type);
         }
@@ -48,7 +47,6 @@ export default function OnboardingPage() {
     }
   }, [searchParams]);
 
-  // Uncomment when MultistepWrap is created
   if (selectedProfile) {
     return (
       <MultistepWrap

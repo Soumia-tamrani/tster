@@ -61,7 +61,7 @@ export default function ProStep1({
     firstName: providedDefaults?.firstName || "",
     lastName: providedDefaults?.lastName || "",
     email: providedDefaults?.email || "",
-    phone: providedDefaults?.phone || "",
+    phone: "",
     country: providedDefaults?.country || "",
     city: providedDefaults?.city || "",
     consent: providedDefaults?.consent || false,
@@ -78,7 +78,7 @@ export default function ProStep1({
   };
 
   const handlePhoneBlur = async () => {
-    const phone = form.getValues("phone").trim();
+    const phone = (form.getValues("phone") || "").trim();
     if (!phone) {
       setPhoneErrors({ phone: "Le numéro de téléphone est requis" });
       return false;
@@ -485,6 +485,7 @@ export default function ProStep1({
                       )}
                     </div>
                   </FormControl>
+                  <FormMessage />
                   {phoneErrors.phone || form.formState.errors.phone ? (
                     <p className="text-red-500 text-xs flex items-center mt-1 animate-in fade-in">
                       <AlertCircle className="mr-1 h-4 w-4" />

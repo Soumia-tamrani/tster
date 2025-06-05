@@ -53,11 +53,8 @@ export async function POST(request: NextRequest) {
       country,
       city,
       referrerEmail,
-      referrerType,
-      // Additional fields from other steps
       sector,
       professionalInterests,
-      // Company specific fields
       companyName,
       companySize,
       companyNeeds,
@@ -68,7 +65,6 @@ export async function POST(request: NextRequest) {
       profileType,
     } = data;
 
-    // Find referrer if exists
     let parrainId = null;
     if (referrerEmail) {
       const referrer = await prisma.user.findUnique({

@@ -89,12 +89,16 @@ export default function EntrepriseStep3({
   const handleSubmit = async (data: any) => {
     try {
       setIsSaving(true);
+
       const storageKey = "onboardingEntrepriseFormData";
       const allFormData = localStorage.getItem(storageKey);
+
       if (!allFormData) {
         throw new Error("No form data found");
       }
       const formData = JSON.parse(allFormData);
+      const referrerEmail = localStorage.getItem("referrerEmail");
+
       const response = await fetch("/api/onboarding/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,6 +106,7 @@ export default function EntrepriseStep3({
           ...formData,
           ...data,
           profileType: "entreprise",
+          referrerEmail: referrerEmail || null,
         }),
       });
       if (!response.ok) {

@@ -112,7 +112,7 @@ export default function EntrepriseStep1({
   };
 
   const handlePhoneBlur = async () => {
-    const phone = form.getValues("phone").trim();
+    const phone = (form.getValues("phone") || "").trim();
     if (!phone) {
       setPhoneErrors({ phone: "Le numéro de téléphone est requis" });
       return false;
