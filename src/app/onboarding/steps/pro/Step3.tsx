@@ -69,12 +69,7 @@ export default function ProStep3({
     try {
       setIsSaving(true);
 
-      const storageKey =
-        profileType === "entreprise"
-          ? "onboardingEntrepriseFormData"
-          : "onboardingFormData";
-
-      const allFormData = localStorage.getItem(storageKey);
+      const allFormData = localStorage.getItem("onboardingFormData");
       if (!allFormData) {
         throw new Error("No form data found");
       }
@@ -285,9 +280,10 @@ export default function ProStep3({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
-                    Créer Mon Compte Et Recevoir Des Communications Liées À La
-                    Plateforme, Conformément À La Politique De Confidentialité.
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub
+                    Pour Créer Mon Compte Et Recevoir Des Communications Liées À
+                    La Plateforme, Conformément À La Politique De
+                    Confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
