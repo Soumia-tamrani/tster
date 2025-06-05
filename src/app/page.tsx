@@ -527,7 +527,7 @@ export default function Home() {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <img
-                  src="/logoFooter.png"
+                  src="/logo-Footer.png"
                   alt="Catchub Logo"
                   className="h-7 w-auto hover:opacity-90 transition-opacity duration-300"
                 />
