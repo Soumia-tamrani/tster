@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { ArrowLeft, Building2, CheckCircle, UserRound } from "lucide-react";
 import MultistepWrap from "./MultistepWrap";
 import { useSearchParams } from "next/navigation";
@@ -12,7 +12,7 @@ const features = [
   "Événements de networking",
 ];
 
-export default function OnboardingPage() {
+function OnboardingPageInner() {
   const searchParams = useSearchParams();
   const initialProfile = searchParams.get("profile");
   const [selectedProfile, setSelectedProfile] = useState<
@@ -141,5 +141,13 @@ export default function OnboardingPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingPageInner />
+    </Suspense>
   );
 }

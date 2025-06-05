@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   secteur: z.string().min(1, "Le secteur d'activité est requis."),
@@ -45,8 +44,6 @@ export default function ProStep3({
   setOnProceed?: (cb: () => void) => void;
 }) {
   const [isSaving, setIsSaving] = useState(false);
-  const searchParams = useSearchParams();
-  const profileType = searchParams.get("profile");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,7 +81,6 @@ export default function ProStep3({
 
       const formData = JSON.parse(allFormData);
       const referrerEmail = localStorage.getItem("referrerEmail");
-      const role = profileType === "entreprise" ? "ENTREPRISE" : "PROFESSIONAL";
 
       const mappedData = {
         firstName: formData.firstName ?? "",
@@ -93,7 +89,7 @@ export default function ProStep3({
         phone: formData.phone ?? "",
         city: formData.city ?? "",
         country: formData.country ?? "",
-        role: role,
+        role: "PROFESSIONAL",
         secteur: data?.secteur ?? "",
         centreInteret: data?.centre ?? "",
         referralSource: data?.source ?? "",
