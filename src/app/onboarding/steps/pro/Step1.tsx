@@ -65,7 +65,7 @@ export default function ProStep1({
       lastName: "",
       email: "",
       phone: "",
-      country: "",
+      country: "MA",
       city: "",
       consent: false,
     },
