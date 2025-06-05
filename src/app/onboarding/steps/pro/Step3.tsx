@@ -85,25 +85,30 @@ export default function ProStep3({
 
       const formData = JSON.parse(allFormData);
       const referrerEmail = localStorage.getItem("referrerEmail");
-      console.log(
-        "all the data====>",
-        formData,
-        data,
-        profileType,
-        referrerEmail
-      );
+      const role = profileType === "entreprise" ? "ENTREPRISE" : "PROFESSIONAL";
+
+      const mappedData = {
+        firstName: formData.firstName ?? "",
+        lastName: formData.lastName ?? "",
+        email: formData.email ?? "",
+        phone: formData.phone ?? "",
+        city: formData.city ?? "",
+        country: formData.country ?? "",
+        role: role,
+        secteur: data?.secteur ?? "",
+        centreInteret: data?.centre ?? "",
+        referralSource: data?.source ?? "",
+        referrerEmail: referrerEmail || null,
+      };
+
+      console.log("mapped data====>", mappedData);
 
       const response = await fetch("/api/onboarding/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          ...data,
-          profileType,
-          referrerEmail: referrerEmail || null,
-        }),
+        body: JSON.stringify(mappedData),
       });
 
       if (!response.ok) {
@@ -249,15 +254,17 @@ export default function ProStep3({
                         <SelectValue placeholder="Sélectionnez une option" />
                       </SelectTrigger>
                       <SelectContent className="max-h-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border-gray-100 dark:border-gray-700">
-                        <SelectItem value="SOCIAL_MEDIA">
+                        <SelectItem value="RESEAUX_SOCIAUX">
                           Réseaux sociaux
                         </SelectItem>
-                        <SelectItem value="SEARCH">
+                        <SelectItem value="RECHERCHE_EN_LIGNE">
                           Moteur de recherche
                         </SelectItem>
-                        <SelectItem value="FRIEND">Recommandation</SelectItem>
-                        <SelectItem value="EVENT">Événement</SelectItem>
-                        <SelectItem value="OTHER">Autre</SelectItem>
+                        <SelectItem value="RECOMMANDATION">
+                          Recommandation
+                        </SelectItem>
+                        <SelectItem value="PUBLICITE">Événement</SelectItem>
+                        <SelectItem value="AUTRE">Autre</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

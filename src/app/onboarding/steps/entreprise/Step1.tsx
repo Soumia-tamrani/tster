@@ -66,9 +66,9 @@ const cityOptions = [
   { value: "marrakech", label: "Marrakech" },
 ];
 const companySizeOptions = [
-  { value: "pme", label: "PME" },
-  { value: "startup", label: "Startup" },
-  { value: "grande_entreprise", label: "Grande entreprise" },
+  { value: "STARTUP", label: "Startup" },
+  { value: "PME", label: "PME" },
+  { value: "GRANDE_ENTREPRISE", label: "Grande Entreprise" },
 ];
 
 export default function EntrepriseStep1({
@@ -598,11 +598,13 @@ export default function EntrepriseStep1({
                         <SelectValue placeholder="Taille de l'entreprise" />
                       </SelectTrigger>
                       <SelectContent>
-                        {companySizeOptions.map((opt) => (
-                          <SelectItem key={opt.value} value={opt.value}>
-                            {opt.label}
+                        <SelectContent>
+                          <SelectItem value="STARTUP">Startup</SelectItem>
+                          <SelectItem value="PME">PME</SelectItem>
+                          <SelectItem value="GRANDE_ENTREPRISE">
+                            Grande Entreprise
                           </SelectItem>
-                        ))}
+                        </SelectContent>
                       </SelectContent>
                     </Select>
                   </FormControl>

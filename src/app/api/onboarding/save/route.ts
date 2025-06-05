@@ -1,119 +1,72 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-function toCompanySizeEnum(val: string | undefined): string | undefined {
-  if (!val) return undefined;
-  const map: Record<string, string> = {
-    startup: "STARTUP",
-    pme: "PME",
-    grande_entreprise: "GRANDE_ENTREPRISE",
-    STARTUP: "STARTUP",
-    PME: "PME",
-    GRANDE_ENTREPRISE: "GRANDE_ENTREPRISE",
-  };
-  return map[val.toLowerCase()] || undefined;
-}
-
-function toCompanyNeedsEnum(arr: string[] | undefined): string[] {
-  if (!arr) return [];
-  return arr
-    .map((v: string) => {
-      if (!v) return undefined;
-      const map: Record<string, string> = {
-        presentation_marque: "PRESENTATION_MARQUE",
-        reseau_b2b: "RESEAU_B2B",
-        talents_qualifies: "TALENTS_QUALIFIES",
-        tableaux_bord: "TABLEAUX_BORD",
-        insights_sectoriels: "INSIGHTS_SECTORIELS",
-        offres_emploi: "OFFRES_EMPLOI",
-        mentors_sectoriels: "MENTORS_SECTORIELS",
-        freelance_hub: "FREELANCE_HUB",
-        PRESENTATION_MARQUE: "PRESENTATION_MARQUE",
-        RESEAU_B2B: "RESEAU_B2B",
-        TALENTS_QUALIFIES: "TALENTS_QUALIFIES",
-        TABLEAUX_BORD: "TABLEAUX_BORD",
-        INSIGHTS_SECTORIELS: "INSIGHTS_SECTORIELS",
-        OFFRES_EMPLOI: "OFFRES_EMPLOI",
-        MENTORS_SECTORIELS: "MENTORS_SECTORIELS",
-        FREELANCE_HUB: "FREELANCE_HUB",
-      };
-      return map[v.toLowerCase()] || undefined;
-    })
-    .filter(Boolean) as string[];
-}
-
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+
+    console.log("data from the front====>", data);
     const {
       firstName,
       lastName,
       email,
       phone,
-      country,
       city,
-      referrerEmail,
-      sector,
-      professionalInterests,
+      country,
+      role,
+      referralSource,
+      secteur,
+      centreInteret,
       companyName,
       companySize,
-      companyNeeds,
-      companyChallenges,
-      companyWebsite,
-      mainNeed,
-      otherSector,
-      profileType,
+      roleInCompany,
+      besoin,
+      site,
     } = data;
 
-    let parrainId = null;
-    if (referrerEmail) {
+    let resolvedParrainId = null;
+    if (data.referrerEmail) {
       const referrer = await prisma.user.findUnique({
-        where: { Email: referrerEmail },
+        where: { email: data.referrerEmail },
       });
       if (referrer) {
-        parrainId = referrer.id;
+        resolvedParrainId = referrer.id;
       }
     }
 
     const user = await prisma.user.create({
       data: {
-        Prénom: firstName,
-        Nom: lastName,
-        Email: email,
-        Téléphone_mobile: phone,
-        role: profileType === "entreprise" ? "BUSINESS" : "PROFESSIONAL",
-        city: city,
-        country: country,
-        sector: sector || "AUTRE",
-        emailVerified: true,
-        parrainId: parrainId,
+        firstName,
+        lastName,
+        email,
+        phone,
+        city,
+        country,
+        role,
+        referralSource: referralSource || null,
+        parrainId: resolvedParrainId,
         createdAt: new Date(),
-        registrationDate: new Date(),
       },
     });
 
-    if (profileType === "entreprise") {
-      await prisma.companyDetail.create({
+    if (role === "PROFESSIONAL") {
+      await prisma.professionalProfile.create({
         data: {
           userId: user.id,
-          companyName: companyName,
-          companySize: toCompanySizeEnum(companySize) as any,
-          companyNeeds: toCompanyNeedsEnum(companyNeeds) as any,
-          companyChallenges: companyChallenges,
-          companyWebsite: companyWebsite,
-          mainNeed: mainNeed,
-          otherSector: otherSector,
-          city: city,
-          country: country,
+          secteur,
+          centreInteret,
         },
       });
-    } else {
-      await prisma.professionalDetail.create({
+    } else if (role === "ENTREPRISE") {
+      await prisma.entrepriseProfile.create({
         data: {
           userId: user.id,
-          professionalInterests: professionalInterests,
-          city: city,
-          country: country,
+          companyName,
+          companySize,
+          roleInCompany,
+          secteur,
+          besoin,
+          site: site || null,
         },
       });
     }

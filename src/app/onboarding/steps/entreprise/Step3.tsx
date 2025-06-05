@@ -28,7 +28,7 @@ const secteurOptions = [
   { value: "COMMERCE", label: "Commerce" },
   { value: "FINANCE", label: "Finance" },
   { value: "SANTE", label: "Santé" },
-  { value: "ÉNERGIE_DURABILITE", label: "Énergie & Durabilité" },
+  { value: "ENERGIE_DURABILITE", label: "Énergie & Durabilité" },
   { value: "TRANSPORT", label: "Transport" },
   { value: "INDUSTRIE", label: "Industrie" },
   { value: "COMMERCE_DISTRIBUTION", label: "Commerce & Distribution" },
@@ -44,7 +44,7 @@ const formSchema = z.object({
   secteurAutre: z.string().optional(),
   besoin: z.string().min(1, "Le besoin principal est requis."),
   site: z.string().optional(),
-  decouverte: z.string().min(1, "Ce champ est requis."),
+  referralSource: z.string().min(1, "Ce champ est requis."),
   consent: z.literal(true, {
     errorMap: () => ({ message: "Vous devez accepter pour continuer." }),
   }),
@@ -71,7 +71,7 @@ export default function EntrepriseStep3({
       secteurAutre: "",
       besoin: "",
       site: "",
-      decouverte: "",
+      referralSource: "",
       consent: false,
     },
     mode: "onChange",
@@ -99,16 +99,43 @@ export default function EntrepriseStep3({
       const formData = JSON.parse(allFormData);
       const referrerEmail = localStorage.getItem("referrerEmail");
 
+      console.log("Step3 form data:", data);
+      console.log("Stored form data:", formData);
+
+      const payload: any = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        country: formData.country,
+        companyName: formData.companyName,
+        companySize: formData.companySize,
+        roleInCompany: formData.role,
+
+        secteur: data.secteur,
+        besoin: data.besoin,
+        site: data.site,
+        referralSource: data.referralSource,
+
+        role: "ENTREPRISE",
+        referrerEmail: referrerEmail || null,
+        profileType: "entreprise",
+        consent: data.consent,
+      };
+
+      if (data.secteur === "AUTRE" && data.secteurAutre) {
+        payload.secteurAutre = data.secteurAutre;
+      }
+
+      console.log("Final payload:", payload);
+
       const response = await fetch("/api/onboarding/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          ...data,
-          profileType: "entreprise",
-          referrerEmail: referrerEmail || null,
-        }),
+        body: JSON.stringify(payload),
       });
+
       if (!response.ok) {
         throw new Error("Failed to save data");
       }
@@ -204,7 +231,7 @@ export default function EntrepriseStep3({
             />
             <FormField
               control={form.control}
-              name="decouverte"
+              name="referralSource"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Comment Avez-Vous Découvert Catchhub ?</FormLabel>
@@ -226,12 +253,12 @@ export default function EntrepriseStep3({
                           Réseaux sociaux
                         </SelectItem>
                         <SelectItem value="RECHERCHE_EN_LIGNE">
-                          Recherche en ligne
+                          Moteur de recherche
                         </SelectItem>
                         <SelectItem value="RECOMMANDATION">
-                          Recommandation d'un ami ou collègue
+                          Recommandation
                         </SelectItem>
-                        <SelectItem value="PUBLICITE">Publicité</SelectItem>
+                        <SelectItem value="PUBLICITE">Événement</SelectItem>
                         <SelectItem value="AUTRE">Autre</SelectItem>
                       </SelectContent>
                     </Select>
@@ -273,7 +300,7 @@ export default function EntrepriseStep3({
         </div>
         <button
           ref={submitRef}
-          type="button"
+          type="submit"
           className="hidden"
           aria-hidden="true"
         ></button>

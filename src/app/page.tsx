@@ -90,7 +90,7 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-5">
-            <Link href="/register">
+            <Link href="/onboarding">
               <Button className="bg-[#003E5D] hover:bg-[#005F86] text-white font-medium px-4 py-2 sm:px-5 sm:py-2 rounded-lg font-montserrat text-sm sm:text-base">
                 Essai Gratuit
               </Button>
