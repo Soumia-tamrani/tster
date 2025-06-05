@@ -1,11 +1,7 @@
 "use client";
+
 import React, { useEffect, useState, useRef } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
-import Step2 from "./steps/pro/Step2";
-import Step3 from "./steps/pro/Step3";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import ProStep1 from "./steps/pro/Step1";
 import ProStep2 from "./steps/pro/Step2";
 import ProStep3 from "./steps/pro/Step3";
@@ -13,6 +9,7 @@ import ProStep4 from "./steps/pro/Step4";
 import EntrepriseStep1 from "./steps/entreprise/Step1";
 import EntrepriseStep3 from "./steps/entreprise/Step3";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const LOCAL_STORAGE_KEY = "onboardingFormData";
 const STEP_STORAGE_KEY = "onboardingCurrentStep";
@@ -44,27 +41,6 @@ function ProgressBar({ step }: { step: number }) {
     </div>
   );
 }
-
-const proStepTitles = [
-  "Informations personnelles",
-  "Votre parcours professionnel",
-  "Complétez votre profil",
-];
-const proStepSubtitles = [
-  "Merci de compléter ces informations pour poursuivre votre inscription.\nTous les champs marqués d'un * sont obligatoires",
-  "Ajoutez vos expériences et compétences pour enrichir votre profil.",
-  "Ajoutez une photo et finalisez votre inscription.",
-];
-const entrepriseStepTitles = [
-  "Informations entreprise",
-  "Détails de l'entreprise",
-  "Finalisez l'inscription",
-];
-const entrepriseStepSubtitles = [
-  "Merci de compléter les informations de votre entreprise.",
-  "Ajoutez des détails pour enrichir votre profil entreprise.",
-  "Ajoutez un logo et finalisez l'inscription.",
-];
 
 export default function MultistepWrap({
   profileType,
@@ -169,12 +145,12 @@ export default function MultistepWrap({
   return (
     <div className="relative w-full min-h-screen bg-[#FCFCFD] flex flex-col items-center mx-auto">
       <div className="absolute w-full h-[300px] md:h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
-      <a
+      <Link
         href="/"
         className="absolute z-20 top-4 left-4 md:top-[77px] md:left-[122px] w-10 h-10 md:w-[45px] md:h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
       >
         <ArrowLeft className="text-white" size={20} />
-      </a>
+      </Link>
       <div
         className="relative flex flex-col items-center justify-center pt-8 pb-8 md:pt-12 md:pb-12 bg-transparent z-10 w-[90vw] max-w-[700px]"
         style={{ marginTop: 40 }}

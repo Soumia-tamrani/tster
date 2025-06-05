@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 
 const secteurOptions = [
   { value: "TECHNOLOGIE", label: "Technologie" },
@@ -169,7 +168,7 @@ export default function EntrepriseStep3({
               name="secteur"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Secteur d'activité</FormLabel>
+                  <FormLabel>Secteur d&apos;activité</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -226,7 +225,7 @@ export default function EntrepriseStep3({
               name="site"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Site web d'entreprise.</FormLabel>
+                  <FormLabel>Site web d&apos;entreprise.</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -295,7 +294,7 @@ export default function EntrepriseStep3({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte Que Mes Données Soient Utilisées Par Catchhub Pour
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
                     Créer Mon Compte Et Recevoir Des Communications Liées À La
                     Plateforme, Conformément À La Politique De Confidentialité.
                   </FormLabel>

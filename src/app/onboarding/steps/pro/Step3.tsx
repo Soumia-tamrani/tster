@@ -11,7 +11,6 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -145,7 +144,7 @@ export default function ProStep3({
               name="secteur"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Secteur d'activité</FormLabel>
+                  <FormLabel>Secteur d&apos;activité</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -199,7 +198,7 @@ export default function ProStep3({
               name="centre"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Centre d'intérêt professionnel</FormLabel>
+                  <FormLabel>Centre d&apos;intérêt professionnel</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -290,7 +289,7 @@ export default function ProStep3({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte Que Mes Données Soient Utilisées Par Catchhub Pour
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
                     Créer Mon Compte Et Recevoir Des Communications Liées À La
                     Plateforme, Conformément À La Politique De Confidentialité.
                   </FormLabel>

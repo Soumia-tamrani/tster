@@ -354,7 +354,7 @@ export default function ProStep1({
             Merci de compléter ces informations pour poursuivre votre
             inscription.
             <br />
-            Tous les champs marqués d'un{" "}
+            Tous les champs marqués d&apos;un
             <span className="text-[#1CD5F5]">*</span> sont obligatoires
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
@@ -518,7 +518,7 @@ export default function ProStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte que mes données soient utilisées par Catchhub pour
+                    J&apos;accepte que mes données soient utilisées par Catchhub pour
                     créer mon compte et recevoir des communications liées à la
                     plateforme, conformément à la politique de confidentialité.
                   </FormLabel>

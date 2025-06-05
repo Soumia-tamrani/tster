@@ -55,21 +55,6 @@ const roleOptions = [
   { value: "manager", label: "Manager" },
   { value: "autre", label: "Autre" },
 ];
-const countryOptions = [
-  { value: "maroc", label: "Maroc" },
-  { value: "france", label: "France" },
-  { value: "espagne", label: "Espagne" },
-];
-const cityOptions = [
-  { value: "casablanca", label: "Casablanca" },
-  { value: "rabat", label: "Rabat" },
-  { value: "marrakech", label: "Marrakech" },
-];
-const companySizeOptions = [
-  { value: "STARTUP", label: "Startup" },
-  { value: "PME", label: "PME" },
-  { value: "GRANDE_ENTREPRISE", label: "Grande Entreprise" },
-];
 
 export default function EntrepriseStep1({
   onNext,
@@ -385,7 +370,7 @@ export default function EntrepriseStep1({
             Merci de compléter ces informations pour poursuivre votre
             inscription.
             <br />
-            Tous les champs marqués d'un{" "}
+            Tous les champs marqués d&apos;un{" "}
             <span className="text-[#1CD5F5]">*</span> sont obligatoires
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
@@ -425,7 +410,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Votre Rôle Dans L'entreprise{" "}
+                    Votre Rôle Dans L&apos;entreprise
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -550,7 +535,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Nom De L'entreprise{" "}
+                    Nom De L&apos;entreprise
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -581,7 +566,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Taille De L'entreprise{" "}
+                    Taille De L&apos;entreprise{" "}
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -630,7 +615,7 @@ export default function EntrepriseStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte Que Mes Données Soient Utilisées Par Catchhub Pour
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
                     Créer Mon Compte Et Recevoir Des Communications Liées À La
                     Plateforme, Conformément À La Politique De Confidentialité.
                   </FormLabel>

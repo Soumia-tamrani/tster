@@ -50,7 +50,7 @@ const NewsletterSection = () => {
         {/* Texte */}
         <div className="text-left w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#013959] dark:text-white">
-            S'abonner à notre newsletter
+            S&apos;abonner à notre newsletter
           </h2>
           <p
             className="text-xs sm:text-sm md:text-base text-[#013959] dark:text-gray-300 mt-2"
@@ -76,7 +76,7 @@ const NewsletterSection = () => {
                 onClick={() => setIsSubscribed(false)}
                 className="bg-[#013959] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md hover:bg-opacity-90 transition-colors text-sm sm:text-base"
               >
-                S'abonner à nouveau
+                S&apos;abonner à nouveau
               </button>
             </div>
           ) : needsRegistration ? (
@@ -87,7 +87,7 @@ const NewsletterSection = () => {
               </p>
               <Link href="/register">
                 <button className="bg-[#013959] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md hover:bg-opacity-90 transition-colors text-sm sm:text-base">
-                  S'inscrire maintenant
+                  S&apos;inscrire maintenant
                 </button>
               </Link>
             </div>
