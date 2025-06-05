@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 const secteurOptions = [
   { value: "TECHNOLOGIE", label: "Technologie" },
@@ -62,6 +63,7 @@ export default function EntrepriseStep3({
   setCanProceed?: (can: boolean) => void;
   setOnProceed?: (cb: () => void) => void;
 }) {
+  const [isSaving, setIsSaving] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -75,8 +77,6 @@ export default function EntrepriseStep3({
     mode: "onChange",
   });
 
-  const secteurValue = form.watch("secteur");
-
   useEffect(() => {
     form.reset(defaultValues);
   }, [defaultValues]);
@@ -86,13 +86,38 @@ export default function EntrepriseStep3({
     if (setOnProceed) setOnProceed(() => form.handleSubmit(handleSubmit));
   }, [form.formState.isValid, setCanProceed, setOnProceed]);
 
-  const handleSubmit = (data: any) => {
-    localStorage.setItem(
-      "onboardingEntrepriseFormData",
-      JSON.stringify({ ...(defaultValues || {}), ...data })
-    );
-    localStorage.setItem("onboardingEntrepriseCurrentStep", "2");
-    onNext(data);
+  const handleSubmit = async (data: any) => {
+    try {
+      setIsSaving(true);
+      const storageKey = "onboardingEntrepriseFormData";
+      const allFormData = localStorage.getItem(storageKey);
+      if (!allFormData) {
+        throw new Error("No form data found");
+      }
+      const formData = JSON.parse(allFormData);
+      const response = await fetch("/api/onboarding/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          ...data,
+          profileType: "entreprise",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save data");
+      }
+      const result = await response.json();
+      if (result.success) {
+        onNext(data);
+      } else {
+        throw new Error(result.error || "Failed to save data");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -243,7 +268,7 @@ export default function EntrepriseStep3({
         </div>
         <button
           ref={submitRef}
-          type="submit"
+          type="button"
           className="hidden"
           aria-hidden="true"
         ></button>

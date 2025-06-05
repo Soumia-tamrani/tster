@@ -21,7 +21,6 @@ import { isValidPhoneForCountry, updatedCountriesList } from "@/lib/form-utils";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-
 const countries = updatedCountriesList.map((country) => ({
   name: country.name,
   code: country.code,
@@ -35,7 +34,7 @@ const formSchema = z.object({
   email: z.string().email("Email invalide."),
   phone: z.string().min(1, "Le téléphone est requis."),
   country: z.string().min(1, "Le pays est requis."),
-  city: z.string().min(1, "La ville est requise."),
+  city: z.string().optional(),
   consent: z.literal(true, {
     errorMap: () => ({ message: "Vous devez accepter pour continuer." }),
   }),
@@ -58,17 +57,20 @@ export default function ProStep1({
   const [isCheckingPhone, setIsCheckingPhone] = useState(false);
   const [phoneErrors, setPhoneErrors] = useState<Record<string, string>>({});
 
+  const getDefaultFormValues = (providedDefaults?: any) => ({
+    firstName: providedDefaults?.firstName || "",
+    lastName: providedDefaults?.lastName || "",
+    email: providedDefaults?.email || "",
+    phone: providedDefaults?.phone || "",
+    country: providedDefaults?.country || "",
+    city: providedDefaults?.city || "",
+    consent: providedDefaults?.consent || false,
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValues || {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      country: "",
-      city: "",
-      consent: false,
-    },
+    defaultValues: getDefaultFormValues(defaultValues),
+    mode: "onChange",
   });
 
   const getCurrentCountryCode = (): string => {
@@ -81,28 +83,30 @@ export default function ProStep1({
       setPhoneErrors({ phone: "Le numéro de téléphone est requis" });
       return false;
     }
- 
+
     const validation = validatePhoneFormat(phone, selectedCountryCode);
     if (!validation.isValid) {
       setPhoneErrors({ phone: validation.error || "Format invalide" });
       return false;
     }
- 
+
     setPhoneErrors({});
     return true;
   };
- 
+
   const getPhoneExample = (): string => {
-    const country = updatedCountriesList.find((c) => c.code === selectedCountryCode);
+    const country = updatedCountriesList.find(
+      (c) => c.code === selectedCountryCode
+    );
     const limits = getPhoneLengthLimits(selectedCountryCode);
- 
+
     let lengthInfo = "";
     if (limits.exactLength) {
       lengthInfo = ` (exactement ${limits.exactLength} chiffres)`;
     } else if (limits.min && limits.max) {
       lengthInfo = ` (${limits.min}-${limits.max} chiffres)`;
     }
- 
+
     const countryName = country?.name || "ce pays";
     return `Format pour ${countryName}${lengthInfo}`;
   };
@@ -121,7 +125,7 @@ export default function ProStep1({
   const handlePhoneChange = (value?: string) => {
     const cleanValue = value ? toE164Format(value) : "";
     form.setValue("phone", cleanValue);
- 
+
     if (cleanValue && cleanValue.length >= 3) {
       const validation = validatePhoneFormat(cleanValue, selectedCountryCode);
       if (!validation.isValid) {
@@ -137,11 +141,11 @@ export default function ProStep1({
   const handleCountryChange = (countryName: string) => {
     const selected = countries.find((c) => c.name === countryName);
     if (!selected) return;
- 
+
     setSelectedCountryCode(selected.code);
     form.setValue("country", selected.name);
     setPhoneErrors({});
- 
+
     const currentPhone = form.getValues("phone");
     if (currentPhone) {
       setTimeout(() => {
@@ -153,8 +157,13 @@ export default function ProStep1({
     }
   };
 
-  const getPhoneLengthLimits = (countryCode: string): { exactLength?: number; min?: number; max?: number } => {
-    const limits: Record<string, { exactLength?: number; min?: number; max?: number }> = {
+  const getPhoneLengthLimits = (
+    countryCode: string
+  ): { exactLength?: number; min?: number; max?: number } => {
+    const limits: Record<
+      string,
+      { exactLength?: number; min?: number; max?: number }
+    > = {
       MA: { exactLength: 12 },
       FR: { exactLength: 11 },
       CA: { exactLength: 11 },
@@ -179,19 +188,22 @@ export default function ProStep1({
     return phone.replace(/\D/g, "");
   };
 
-  const validatePhoneFormat = (phone: string, countryCode: string): { isValid: boolean; error?: string } => {
+  const validatePhoneFormat = (
+    phone: string,
+    countryCode: string
+  ): { isValid: boolean; error?: string } => {
     if (!phone) {
       return { isValid: false, error: "Le numéro de téléphone est requis" };
     }
- 
+
     const country = updatedCountriesList.find((c) => c.code === countryCode);
     if (!country) {
       return { isValid: false, error: "Pays non reconnu" };
     }
- 
+
     const cleanPhone = cleanPhoneNumber(phone);
     const limits = getPhoneLengthLimits(countryCode);
- 
+
     if (limits.exactLength) {
       if (cleanPhone.length !== limits.exactLength) {
         return { isValid: false, error: "Format invalide" };
@@ -201,30 +213,33 @@ export default function ProStep1({
         return { isValid: false, error: "Format invalide" };
       }
     }
- 
+
     let phoneToValidate = phone;
- 
+
     if (!phoneToValidate.startsWith(country.prefix)) {
       if (phoneToValidate.startsWith("0")) {
         phoneToValidate = country.prefix + phoneToValidate.substring(1);
       } else if (phoneToValidate.startsWith("+")) {
         if (!phoneToValidate.startsWith(country.prefix)) {
-          return { isValid: false, error: "Format invalide pour " + country.name };
+          return {
+            isValid: false,
+            error: "Format invalide pour " + country.name,
+          };
         }
       } else {
         phoneToValidate = country.prefix + phoneToValidate;
       }
     }
- 
+
     const isValid = isValidPhoneForCountry(phoneToValidate, countryCode);
- 
+
     if (!isValid) {
       return { isValid: false, error: "Format invalide pour " + country.name };
     }
- 
+
     return { isValid: true };
   };
- 
+
   useEffect(() => {
     const defaultCountry = countries.find((c) => c.name === "Maroc");
     if (defaultCountry) {

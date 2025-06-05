@@ -1,6 +1,47 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+function toCompanySizeEnum(val: string | undefined): string | undefined {
+  if (!val) return undefined;
+  const map: Record<string, string> = {
+    startup: "STARTUP",
+    pme: "PME",
+    grande_entreprise: "GRANDE_ENTREPRISE",
+    STARTUP: "STARTUP",
+    PME: "PME",
+    GRANDE_ENTREPRISE: "GRANDE_ENTREPRISE",
+  };
+  return map[val.toLowerCase()] || undefined;
+}
+
+function toCompanyNeedsEnum(arr: string[] | undefined): string[] {
+  if (!arr) return [];
+  return arr
+    .map((v: string) => {
+      if (!v) return undefined;
+      const map: Record<string, string> = {
+        presentation_marque: "PRESENTATION_MARQUE",
+        reseau_b2b: "RESEAU_B2B",
+        talents_qualifies: "TALENTS_QUALIFIES",
+        tableaux_bord: "TABLEAUX_BORD",
+        insights_sectoriels: "INSIGHTS_SECTORIELS",
+        offres_emploi: "OFFRES_EMPLOI",
+        mentors_sectoriels: "MENTORS_SECTORIELS",
+        freelance_hub: "FREELANCE_HUB",
+        PRESENTATION_MARQUE: "PRESENTATION_MARQUE",
+        RESEAU_B2B: "RESEAU_B2B",
+        TALENTS_QUALIFIES: "TALENTS_QUALIFIES",
+        TABLEAUX_BORD: "TABLEAUX_BORD",
+        INSIGHTS_SECTORIELS: "INSIGHTS_SECTORIELS",
+        OFFRES_EMPLOI: "OFFRES_EMPLOI",
+        MENTORS_SECTORIELS: "MENTORS_SECTORIELS",
+        FREELANCE_HUB: "FREELANCE_HUB",
+      };
+      return map[v.toLowerCase()] || undefined;
+    })
+    .filter(Boolean) as string[];
+}
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
@@ -32,42 +73,12 @@ export async function POST(request: NextRequest) {
     if (referrerEmail) {
       const referrer = await prisma.user.findUnique({
         where: { Email: referrerEmail },
-        include: {
-          _count: {
-            select: { filleuls: true },
-          },
-        },
       });
-
       if (referrer) {
         parrainId = referrer.id;
-
-        // Update referrer's rewards based on number of referrals
-        const referralCount = referrer._count.filleuls;
-
-        // Example reward tiers
-        if (referralCount === 0) {
-          // First referral - give basic reward
-          await prisma.user.update({
-            where: { id: referrer.id },
-            data: {
-              // Add your reward logic here
-              // For example: rewardPoints: { increment: 100 }
-            },
-          });
-        } else if (referralCount === 4) {
-          // Fifth referral - give premium reward
-          await prisma.user.update({
-            where: { id: referrer.id },
-            data: {
-              // Add your premium reward logic here
-            },
-          });
-        }
       }
     }
 
-    // Create user with basic info
     const user = await prisma.user.create({
       data: {
         Prénom: firstName,
@@ -85,14 +96,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Create additional details based on profile type
     if (profileType === "entreprise") {
       await prisma.companyDetail.create({
         data: {
           userId: user.id,
           companyName: companyName,
-          companySize: companySize,
-          companyNeeds: companyNeeds,
+          companySize: toCompanySizeEnum(companySize) as any,
+          companyNeeds: toCompanyNeedsEnum(companyNeeds) as any,
           companyChallenges: companyChallenges,
           companyWebsite: companyWebsite,
           mainNeed: mainNeed,
@@ -116,14 +126,6 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "User data saved successfully",
       userId: user.id,
-      referralCount: parrainId
-        ? (
-            await prisma.user.findUnique({
-              where: { id: parrainId },
-              include: { _count: { select: { filleuls: true } } },
-            })
-          )?._count.filleuls
-        : 0,
     });
   } catch (error) {
     console.error("Error saving user data:", error);

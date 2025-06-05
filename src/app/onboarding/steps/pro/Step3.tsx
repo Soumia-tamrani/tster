@@ -73,7 +73,6 @@ export default function ProStep3({
     try {
       setIsSaving(true);
 
-      // Get all form data from localStorage
       const storageKey =
         profileType === "entreprise"
           ? "onboardingEntrepriseFormData"
@@ -86,7 +85,6 @@ export default function ProStep3({
 
       const formData = JSON.parse(allFormData);
 
-      // Save to database
       const response = await fetch("/api/onboarding/save", {
         method: "POST",
         headers: {
@@ -290,14 +288,12 @@ export default function ProStep3({
             </FormDescription>
           </div>
         </div>
-        <Button
-          type="submit"
-          className="w-full bg-[#1CD5F5] hover:bg-[#00b8e6] text-white text-base font-semibold rounded-md h-12 mb-2"
-          disabled={isSaving}
+        <button
           ref={submitRef}
-        >
-          {isSaving ? "Enregistrement..." : "Terminer"}
-        </Button>
+          type="button"
+          className="hidden"
+          aria-hidden="true"
+        ></button>
       </form>
     </Form>
   );
