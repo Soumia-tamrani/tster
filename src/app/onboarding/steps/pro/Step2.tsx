@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -41,7 +43,7 @@ export default function ProStep2({
   setOnProceed?: (cb: () => void) => void;
 }) {
   const [email, setEmail] = useState("");
-  const [resent, setResent] = useState(false);
+  const [, setResent] = useState(false);
   const [showSuccess, setShowSuccess] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
   const [countdown, setCountdown] = useState(0);
