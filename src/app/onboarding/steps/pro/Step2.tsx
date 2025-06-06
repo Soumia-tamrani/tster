@@ -65,44 +65,37 @@ export default function ProStep2({
     return () => clearTimeout(timer);
   }, [defaultValues]);
 
-  const handleSubmit = (data: any) => {
-    const storedCode = sessionStorage.getItem(`verification_${email}`);
-    if (storedCode && data.otp === storedCode) {
-      setIsVerified(true);
-    } else {
+  const handleSubmit = async (data: any) => {
+    try {
+      const response = await fetch("/api/email/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, token: data.otp }),
+      });
+      const result = await response.json();
+      if (response.ok && result.valid) {
+        setIsVerified(true);
+      } else {
+        form.setError("otp", {
+          type: "manual",
+          message: "Le code est incorrect. Veuillez réessayer.",
+        });
+      }
+    } catch (err) {
+      console.error("Erreur:", err);
       form.setError("otp", {
         type: "manual",
-        message: "Le code est incorrect. Veuillez réessayer.",
+        message: "Une erreur est survenue. Veuillez réessayer.",
       });
     }
   };
 
   const sendVerificationEmail = async (email: string) => {
     try {
-      const verificationToken = Math.floor(
-        100000 + Math.random() * 900000
-      ).toString();
-
-      sessionStorage.setItem(`verification_${email}`, verificationToken);
-      const emailContent = {
-        to: email,
-        subject: "Vérification de votre adresse email",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #2563eb;">Vérification de votre adresse email</h2>
-            <p>Merci de votre inscription ! Pour continuer, veuillez utiliser le code de vérification ci-dessous :</p>
-            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; text-align: center; font-size: 24px; letter-spacing: 5px; font-weight: bold;">
-              ${verificationToken}
-            </div>
-            <p>Ce code est valable pendant 10 minutes.</p>
-            <p>Si vous n'avez pas demandé ce code, vous pouvez ignorer cet email.</p>
-          </div>
-        `,
-      };
-      const response = await fetch("/api/email/send-email", {
+      const response = await fetch("/api/email/send-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(emailContent),
+        body: JSON.stringify({ email }),
       });
       if (!response.ok) throw new Error("Erreur lors de l'envoi de l'email");
       setShowSuccess(true);
