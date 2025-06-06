@@ -26,7 +26,17 @@ export default function CountrySelector({ value,defaultValue, onChange, error, o
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const selectedItemRef = useRef<HTMLButtonElement>(null)
-
+ useEffect(() => {
+    if (!value && defaultValue) {
+      const defaultCountry = countries.find(country => country.name === defaultValue)
+      if (defaultCountry) {
+        onChange(defaultCountry.name)
+        if (onPrefixChange) {
+          onPrefixChange(defaultCountry.prefix)
+        }
+      }
+    }
+  }, [defaultValue, countries, onChange, onPrefixChange, value])
   // Filtrer les pays en fonction du terme de recherche
   const filteredCountries = countries.filter(
     (country) =>
