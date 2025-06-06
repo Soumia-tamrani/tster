@@ -66,7 +66,6 @@ export default function ProStep2({
   }, [defaultValues]);
 
   const handleSubmit = (data: any) => {
-    // Retrieve the code from sessionStorage
     const storedCode = sessionStorage.getItem(`verification_${email}`);
     if (storedCode && data.otp === storedCode) {
       setIsVerified(true);
@@ -178,7 +177,7 @@ export default function ProStep2({
               name="otp"
               render={({ field }) => (
                 <FormItem className="mb-4 flex flex-col items-center">
-                  <FormLabel className="self-start">
+                  <FormLabel className="self-start mb-2">
                     Code De Vérification
                   </FormLabel>
                   <FormControl>
@@ -191,30 +190,30 @@ export default function ProStep2({
                       <InputOTPGroup>
                         <InputOTPSlot
                           index={0}
-                          className="h-16 w-16 md:h-20 md:w-20 text-3xl md:text-4xl border-2 rounded-lg mx-1"
+                          className="h-11 w-11 md:h-14 md:w-14 text-2xl md:text-3xl border-2 rounded-lg mx-1"
                         />
                         <InputOTPSlot
                           index={1}
-                          className="h-16 w-16 md:h-20 md:w-20 text-3xl md:text-4xl border-2 rounded-lg mx-1"
+                          className="h-11 w-11 md:h-14 md:w-14 text-2xl md:text-3xl border-2 rounded-lg mx-1"
                         />
                         <InputOTPSlot
                           index={2}
-                          className="h-16 w-16 md:h-20 md:w-20 text-3xl md:text-4xl border-2 rounded-lg mx-1"
+                          className="h-11 w-11 md:h-14 md:w-14 text-2xl md:text-3xl border-2 rounded-lg mx-1"
                         />
                       </InputOTPGroup>
                       <InputOTPSeparator />
                       <InputOTPGroup>
                         <InputOTPSlot
                           index={3}
-                          className="h-16 w-16 md:h-20 md:w-20 text-3xl md:text-4xl border-2 rounded-lg mx-1"
+                          className="h-11 w-11 md:h-14 md:w-14 text-2xl md:text-3xl border-2 rounded-lg mx-1"
                         />
                         <InputOTPSlot
                           index={4}
-                          className="h-16 w-16 md:h-20 md:w-20 text-3xl md:text-4xl border-2 rounded-lg mx-1"
+                          className="h-11 w-11 md:h-14 md:w-14 text-2xl md:text-3xl border-2 rounded-lg mx-1"
                         />
                         <InputOTPSlot
                           index={5}
-                          className="h-16 w-16 md:h-20 md:w-20 text-3xl md:text-4xl border-2 rounded-lg mx-1"
+                          className="h-11 w-11 md:h-14 md:w-14 text-2xl md:text-3xl border-2 rounded-lg mx-1"
                         />
                       </InputOTPGroup>
                     </InputOTP>

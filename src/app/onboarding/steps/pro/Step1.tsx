@@ -526,9 +526,6 @@ export default function ProStep1({
                 </FormItem>
               )}
             />
-            <FormDescription className="font-semibold text-xs mb-1 block mt-2">
-              Fields With Are Required
-            </FormDescription>
           </div>
         </div>
         <button

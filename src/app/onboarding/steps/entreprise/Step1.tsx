@@ -50,10 +50,18 @@ const formSchema = z.object({
 });
 
 const roleOptions = [
-  { value: "ceo", label: "CEO" },
-  { value: "hr", label: "RH" },
-  { value: "manager", label: "Manager" },
-  { value: "autre", label: "Autre" },
+  { value: "fondateur", label: "Fondateur / Co-fondateur" },
+  { value: "dirigeant", label: "Dirigeant(e) / CEO / Président(e)" },
+  { value: "rh", label: "Responsable RH / Recruteur" },
+  { value: "commercial", label: "Responsable commercial / ventes" },
+  { value: "marketing", label: "Responsable marketing / communication" },
+  { value: "partenariats", label: "Responsable des partenariats" },
+  {
+    value: "produit",
+    label: "Directeur / Responsable produit (Product Owner)",
+  },
+  { value: "technique", label: "Responsable technique / CTO / Lead Dev" },
+  { value: "administratif", label: "Responsable administratif / financier" },
 ];
 
 export default function EntrepriseStep1({
@@ -584,10 +592,17 @@ export default function EntrepriseStep1({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectContent>
-                          <SelectItem value="STARTUP">Startup</SelectItem>
-                          <SelectItem value="PME">PME</SelectItem>
+                          <SelectItem value="PETITE_ENTREPRISE">
+                            Petite entreprise (1 à 10)
+                          </SelectItem>
+                          <SelectItem value="ENTREPRISE_CROISSANCE">
+                            Entreprise en croissance (11 à 50)
+                          </SelectItem>
+                          <SelectItem value="MOYENNE_ENTREPRISE">
+                            Moyenne entreprise (PME) (51 à 250)
+                          </SelectItem>
                           <SelectItem value="GRANDE_ENTREPRISE">
-                            Grande Entreprise
+                            Grande entreprise (251 et plus)
                           </SelectItem>
                         </SelectContent>
                       </SelectContent>
@@ -615,17 +630,15 @@ export default function EntrepriseStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
-                    Créer Mon Compte Et Recevoir Des Communications Liées À La
-                    Plateforme, Conformément À La Politique De Confidentialité.
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub
+                    Pour Créer Mon Compte Et Recevoir Des Communications Liées À
+                    La Plateforme, Conformément À La Politique De
+                    Confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormDescription className="font-semibold text-xs mb-1 block mt-2">
-              Fields With Are Required
-            </FormDescription>
           </div>
         </div>
         <button

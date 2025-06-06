@@ -135,15 +135,44 @@ export default function Home() {
             <div className="flex items-center justify-center animate-fade-in delay-200">
               <div className="relative w-full h-[250px] sm:h-[350px] md:h-[400px] lg:h-[450px] rounded-2xl shadow-xl overflow-hidden group hover:shadow-blue-500/20 dark:hover:shadow-purple-500/20 transition-shadow duration-500 bg-white">
                 <video
+                  ref={(el) => {
+                    if (el) {
+                      el.addEventListener("play", () => {
+                        const overlay =
+                          el.parentElement?.querySelector(".video-overlay");
+                        if (overlay) {
+                          overlay.classList.add("hidden");
+                        }
+                      });
+                    }
+                  }}
                   className="absolute top-0 left-0 w-full h-full object-cover"
                   controls
-                  muted
-                  autoPlay
-                  loop
+                  poster="/logo.png"
                 >
                   <source src="/demo.mp4" type="video/mp4" />
                   Votre navigateur ne supporte pas la lecture de vidéos.
                 </video>
+                <div
+                  className="video-overlay absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-all cursor-pointer"
+                  onClick={(e) => {
+                    const video = e.currentTarget
+                      .previousElementSibling as HTMLVideoElement;
+                    if (video) {
+                      video.play();
+                    }
+                  }}
+                >
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/90 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                    <svg
+                      className="w-8 h-8 sm:w-10 sm:h-10 text-[#013959]"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -231,7 +260,7 @@ export default function Home() {
                 bg: "#6857FF30",
                 iconColor: "#6857FF",
                 title: "Mentorat",
-                desc: "Bénéficiez d’un mentorat personnalisé pour accélérer votre parcours et gagner en expérience.",
+                desc: "Bénéficiez d'un mentorat personnalisé pour accélérer votre parcours et gagner en expérience.",
               },
             ].map((feature, i) => (
               <div
@@ -428,13 +457,14 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
               {[
                 {
-                  question: "Comment fonctionne l&aposinscription ?",
+                  question: "Comment fonctionne l'inscription ?",
                   answer:
                     "Remplissez un formulaire rapide, choisissez votre profil (professionel ou entreprise) et rejoignez la liste d'attente. Vous serez notifié dès l'activation de votre accès.",
                 },
 
                 {
-                  question: "Que se passe-t-il à la fin de l&aposessai gratuit ?",
+                  question:
+                    "Que se passe-t-il à la fin de l'essai gratuit ?",
                   answer:
                     "Connectez-vous avec des professionnels et des entreprises de votre secteur grâce à notre algorithme de matching avancé.",
                 },
@@ -485,7 +515,7 @@ export default function Home() {
                   question:
                     "Comment la confidentialité de mes données est-elle assurée ?",
                   answer:
-                    "Nous assurons la sécurité de vos données conformément aux normes en vigueur. Consultez notre politique de confidentialité pour plus d’informations.",
+                    "Nous assurons la sécurité de vos données conformément aux normes en vigueur. Consultez notre politique de confidentialité pour plus d'informations.",
                 },
               ].map((item, i) => (
                 <div
@@ -637,6 +667,8 @@ export default function Home() {
               <Link
                 key={i}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors hover:-translate-y-0.5 transform"
                 aria-label={social.name}
               >
