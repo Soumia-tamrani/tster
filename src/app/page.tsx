@@ -51,6 +51,7 @@ export default function Home() {
             <div className="flex space-x-1">
               {navItems.map((item, index) => (
                 <div key={item.href} className="flex items-center">
+                  
                   <a
                     href={item.href}
                     className={`px-4 py-2 text-sm font-medium transition-all transform relative
