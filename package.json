@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "ts-node prisma/migrate.ts && NEXT_DISABLE_ESLINT=true next build",
+    "build": "node prisma/migrate.js && NEXT_DISABLE_ESLINT=true next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
