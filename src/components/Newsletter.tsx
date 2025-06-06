@@ -74,7 +74,7 @@ const NewsletterSection = () => {
                 onClick={() => setIsSubscribed(false)}
                 className="bg-[#013959] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md hover:bg-opacity-90 transition-colors text-sm sm:text-base"
               >
-                S'abonner à nouveau
+                S&apos;abonner à nouveau
               </button>
             </div>
           ) : needsRegistration ? (
@@ -85,7 +85,7 @@ const NewsletterSection = () => {
               </p>
               <Link href="/onboarding">
                 <button className="bg-[#013959] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md hover:bg-opacity-90 transition-colors text-sm sm:text-base">
-                  S'inscrire maintenant
+                  S&apos;inscrire maintenant
                 </button>
               </Link>
             </div>

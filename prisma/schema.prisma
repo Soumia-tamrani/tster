@@ -7,9 +7,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                     String               @id @default(uuid())
+  firstName              String
+  lastName               String
+  email                  String               @unique
+  phone                  String               @unique
+  city                   String
+  country                String
+  role                   UserRole
+  referralSource         ReferralSource?
+  parrainId              String?
+  createdAt              DateTime             @default(now())
+  subscribedToNewsletter Boolean              @default(false)
+  ipAddress              String?
+  registeredForTrial     Boolean              @default(false)
+  registrationDate       DateTime?
+  emailVerified          Boolean?
+  entrepriseProfile      EntrepriseProfile?
+  professionalProfile    ProfessionalProfile?
+  parrain                User?                @relation("Parrainage", fields: [parrainId], references: [id])
+  filleuls               User[]               @relation("Parrainage")
+}
+
+model ProfessionalProfile {
+  id            String  @id @default(uuid())
+  userId        String  @unique
+  secteur       Secteur
+  centreInteret String
+  user          User    @relation(fields: [userId], references: [id])
+}
+
+model EntrepriseProfile {
+  id            String      @id @default(uuid())
+  userId        String      @unique
+  companyName   String
+  companySize   CompanySize
+  roleInCompany String
+  secteur       Secteur
+  besoin        String
+  site          String?
+  user          User        @relation(fields: [userId], references: [id])
+}
+
+model CookieConsent {
+  id            String   @id @default(cuid())
+  userId        String?
+  sessionId     String
+  consentStatus String
+  consentDate   DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 enum UserRole {
   PROFESSIONAL
-  BUSINESS
+  ENTREPRISE
+}
+
+enum CompanySize {
+  STARTUP
+  PME
+  GRANDE_ENTREPRISE
 }
 
 enum Secteur {
@@ -18,7 +76,7 @@ enum Secteur {
   COMMERCE
   FINANCE
   SANTE
-  ÉNERGIE_DURABILITE
+  ENERGIE_DURABILITE
   TRANSPORT
   INDUSTRIE
   COMMERCE_DISTRIBUTION
@@ -29,97 +87,10 @@ enum Secteur {
   AUTRE
 }
 
-enum ProfessionalInterest {
-  MENTORAT
-  RESEAUTAGE
-  EMPLOI
-  FORMATION
-  AUTRE
-}
-
-enum CompanyNeed {
-  PRESENTATION_MARQUE
-  RESEAU_B2B
-  TALENTS_QUALIFIES
-  TABLEAUX_BORD
-  INSIGHTS_SECTORIELS
-  OFFRES_EMPLOI
-  MENTORS_SECTORIELS
-  FREELANCE_HUB
-}
-
-enum CompanySize {
-  STARTUP
-  PME
-  GRANDE_ENTREPRISE
-}
-
 enum ReferralSource {
   RESEAUX_SOCIAUX
   RECHERCHE_EN_LIGNE
   RECOMMANDATION
   PUBLICITE
   AUTRE
-}
-
-
-model User {
-  id                   String    @id @default(uuid())
-  Prénom               String
-  Nom                  String
-  Email                String    @unique
-  Téléphone_mobile     String    @unique
-  role                 UserRole
-  city                 String?
-  country              String?
-  sector               Secteur
-  createdAt            DateTime  @default(now())
-  emailVerified        Boolean?  @db.Boolean
-  professionalDetails   ProfessionalDetail?
-  companyDetails       CompanyDetail?
-  subscribedToNewsletter Boolean @default(false)
-  registeredForTrial    Boolean @default(false)
-  registrationDate      DateTime?
-  referralSource        ReferralSource?
-  ipAddress             String?
-  utmSource             String?
-  utmMedium             String?
-  utmCampaign           String?
-  
-  parrainId   String? 
-  parrain     User?    @relation("Parrainage", fields: [parrainId], references: [id])
-  filleuls    User[]   @relation("Parrainage")
-
-}
-
-model ProfessionalDetail {
-  id                     String   @id @default(uuid())
-  user                   User     @relation(fields: [userId], references: [id])
-  userId                 String   @unique
-  professionalInterests  ProfessionalInterest[] 
-  city                   String?
-  country                String?
-}
-
-model CompanyDetail {
-  id                    String      @id @default(uuid())
-  user                  User        @relation(fields: [userId], references: [id])
-  userId                String      @unique
-  companyName           String
-  companySize           CompanySize
-  companyNeeds          CompanyNeed[]
-  companyChallenges     String?
-  city                  String?
-  country               String?
-  companyWebsite        String?     
-  mainNeed              String?     
-  otherSector           String?     
-}
-model CookieConsent {
-  id              String   @id @default(cuid())
-  userId          String?  // Si l'utilisateur est connecté
-  sessionId       String   // Utilisé si l'utilisateur n'est pas connecté
-  consentStatus   String   // "accepted" ou "refused"
-  consentDate     DateTime @default(now())
-  updatedAt       DateTime @updatedAt
 }

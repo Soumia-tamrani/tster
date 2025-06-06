@@ -21,8 +21,6 @@ import {
 import { useState } from "react";
 import NewsletterSection from "@/components/Newsletter";
 import Analytics from "@/components/Analytics";
-// import Analytics from "@/components/Analytics";
-// import NewsletterSection from "@/components/NewsletterSection";
 
 const navItems = [
   { label: "Fonctionnalités", href: "#features" },
@@ -31,27 +29,6 @@ const navItems = [
 ];
 
 export default function Home() {
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const email = (
-      e.currentTarget.elements.namedItem("email") as HTMLInputElement
-    )?.value;
-    const name = (
-      e.currentTarget.elements.namedItem("name") as HTMLInputElement
-    )?.value;
-
-    if (email && name) {
-      setIsSubscribed(true);
-      e.currentTarget.reset();
-      setTimeout(() => setIsSubscribed(false), 5000);
-    } else {
-      alert("Veuillez remplir tous les champs.");
-    }
-  };
-
   return (
     <div
       className={`flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-500`}
@@ -77,11 +54,6 @@ export default function Home() {
                   <a
                     href={item.href}
                     className={`px-4 py-2 text-sm font-medium transition-all transform relative
-                      ${
-                        activeSection === item.href
-                          ? "text-[#1CD5F5] font-semibold after:w-full"
-                          : "text-slate-900 dark:text-blue-300"
-                      }
                       hover:text-[#1CD5F5] hover:font-semibold hover:scale-105
                       after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-[#1CD5F5] after:transition-all`}
                   >
@@ -158,15 +130,44 @@ export default function Home() {
             <div className="flex items-center justify-center animate-fade-in delay-200">
               <div className="relative w-full h-[250px] sm:h-[350px] md:h-[400px] lg:h-[450px] rounded-2xl shadow-xl overflow-hidden group hover:shadow-blue-500/20 dark:hover:shadow-purple-500/20 transition-shadow duration-500 bg-white">
                 <video
+                  ref={(el) => {
+                    if (el) {
+                      el.addEventListener("play", () => {
+                        const overlay =
+                          el.parentElement?.querySelector(".video-overlay");
+                        if (overlay) {
+                          overlay.classList.add("hidden");
+                        }
+                      });
+                    }
+                  }}
                   className="absolute top-0 left-0 w-full h-full object-cover"
                   controls
-                  muted
-                  autoPlay
-                  loop
+                  poster="/logo.png"
                 >
                   <source src="/demo.mp4" type="video/mp4" />
                   Votre navigateur ne supporte pas la lecture de vidéos.
                 </video>
+                <div
+                  className="video-overlay absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-all cursor-pointer"
+                  onClick={(e) => {
+                    const video = e.currentTarget
+                      .previousElementSibling as HTMLVideoElement;
+                    if (video) {
+                      video.play();
+                    }
+                  }}
+                >
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/90 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                    <svg
+                      className="w-8 h-8 sm:w-10 sm:h-10 text-[#013959]"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -259,7 +260,6 @@ export default function Home() {
               <div
                 key={i}
                 className="flex flex-col items-start justify-start space-y-5 bg-white border border-[#B4B4B4] rounded-[23px] w-full max-w-sm h-auto px-6 py-8 mx-auto transform transition-transform duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(28,213,245,0.15)]"
-
                 style={{ animationDelay: "0.1s" }}
               >
                 <div

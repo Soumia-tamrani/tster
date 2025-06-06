@@ -1,17 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowLeft,
-  User,
-  Building2,
-  CheckCircle,
-  UserRound,
-} from "lucide-react";
+import { useState, useEffect, Suspense } from "react";
+import { ArrowLeft, Building2, CheckCircle, UserRound } from "lucide-react";
 import MultistepWrap from "./MultistepWrap";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const features = [
   "Offres d'emploi exclusives",
@@ -19,7 +12,7 @@ const features = [
   "Événements de networking",
 ];
 
-export default function OnboardingPage() {
+function OnboardingPageInner() {
   const searchParams = useSearchParams();
   const initialProfile = searchParams.get("profile");
   const [selectedProfile, setSelectedProfile] = useState<
@@ -38,17 +31,15 @@ export default function OnboardingPage() {
       try {
         const referrerEmail = atob(ref);
         localStorage.setItem("referrerEmail", referrerEmail);
-        // Store the referrer's profile type
         if (type) {
           localStorage.setItem("referrerType", type);
         }
       } catch (error) {
-        console.error("Invalid referral code");
+        console.error("Invalid referral code", error);
       }
     }
   }, [searchParams]);
 
-  // Uncomment when MultistepWrap is created
   if (selectedProfile) {
     return (
       <MultistepWrap
@@ -60,16 +51,14 @@ export default function OnboardingPage() {
 
   return (
     <div className="relative w-full min-h-screen bg-[#FCFCFD] flex flex-col items-center mx-auto">
-      {/* Background Rectangle */}
       <div className="absolute w-full h-[300px] md:h-[563px] bg-[#013959] top-0 left-1/2 transform -translate-x-1/2 z-0" />
-      <a
+      <Link
         href="/"
         className="absolute z-20 top-4 left-4 md:top-[77px] md:left-[122px] w-10 h-10 md:w-[45px] md:h-[46.25px] flex items-center justify-center border border-white rounded-full bg-transparent hover:bg-white/10 transition-colors"
       >
         <ArrowLeft className="text-white" size={20} />
-      </a>
+      </Link>
 
-      {/* Header Section on Blue Background */}
       <div className="absolute w-[90vw] max-w-[700px] h-[80px] md:h-[120px] top-[80px] md:top-[140px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 md:gap-6 z-10">
         <div className="text-center">
           <h1 className="text-2xl md:text-4xl font-semibold mb-2 text-white">
@@ -82,7 +71,6 @@ export default function OnboardingPage() {
         </div>
       </div>
 
-      {/* Card Section */}
       {!selectedProfile && (
         <div className="bg-white rounded-[18px] md:rounded-[22px] mt-[180px] md:mt-[300px] shadow-[0_8px_8px_rgba(171,171,171,0.03),0_11px_11px_rgba(171,171,171,0.05),0_3px_6px_rgba(171,171,171,0.06)] w-[95vw] max-w-[1013px] h-auto md:h-[799.44px] p-4 md:p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border border-[#E0E0E0]">
           <div className="text-center mb-6 md:mb-8">
@@ -124,7 +112,6 @@ export default function OnboardingPage() {
               </a>
             </div>
 
-            {/* Entreprise CARD */}
             <div className="w-full max-w-[400px] md:w-[410.84px] h-auto md:h-[455.37px] rounded-[20px] md:rounded-[28.62px] border border-[#E0E0E0] p-6 md:p-[47px_36.93px] flex flex-col items-center text-center hover:shadow-lg transition cursor-pointer">
               <div className="w-16 h-16 md:w-[72.25px] md:h-[72.25px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-4 md:mb-5">
                 <Building2 className="text-[#1CD5F5]" size={24} />
@@ -154,5 +141,13 @@ export default function OnboardingPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingPageInner />
+    </Suspense>
   );
 }

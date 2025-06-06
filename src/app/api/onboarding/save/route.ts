@@ -4,110 +4,69 @@ import { prisma } from "@/lib/prisma";
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+
+    console.log("data from the front====>", data);
     const {
       firstName,
       lastName,
       email,
       phone,
-      country,
       city,
-      referrerEmail,
-      referrerType,
-      // Additional fields from other steps
-      sector,
-      professionalInterests,
-      // Company specific fields
+      country,
+      role,
+      referralSource,
+      secteur,
+      centreInteret,
       companyName,
       companySize,
-      companyNeeds,
-      companyChallenges,
-      companyWebsite,
-      mainNeed,
-      otherSector,
-      profileType,
+      roleInCompany,
+      besoin,
+      site,
     } = data;
 
-    // Find referrer if exists
-    let parrainId = null;
-    if (referrerEmail) {
+    let resolvedParrainId = null;
+    if (data.referrerEmail) {
       const referrer = await prisma.user.findUnique({
-        where: { Email: referrerEmail },
-        include: {
-          _count: {
-            select: { filleuls: true },
-          },
-        },
+        where: { email: data.referrerEmail },
       });
-
       if (referrer) {
-        parrainId = referrer.id;
-
-        // Update referrer's rewards based on number of referrals
-        const referralCount = referrer._count.filleuls;
-
-        // Example reward tiers
-        if (referralCount === 0) {
-          // First referral - give basic reward
-          await prisma.user.update({
-            where: { id: referrer.id },
-            data: {
-              // Add your reward logic here
-              // For example: rewardPoints: { increment: 100 }
-            },
-          });
-        } else if (referralCount === 4) {
-          // Fifth referral - give premium reward
-          await prisma.user.update({
-            where: { id: referrer.id },
-            data: {
-              // Add your premium reward logic here
-            },
-          });
-        }
+        resolvedParrainId = referrer.id;
       }
     }
 
-    // Create user with basic info
     const user = await prisma.user.create({
       data: {
-        Prénom: firstName,
-        Nom: lastName,
-        Email: email,
-        Téléphone_mobile: phone,
-        role: profileType === "entreprise" ? "BUSINESS" : "PROFESSIONAL",
-        city: city,
-        country: country,
-        sector: sector || "AUTRE",
-        emailVerified: true,
-        parrainId: parrainId,
+        firstName,
+        lastName,
+        email,
+        phone,
+        city,
+        country,
+        role,
+        referralSource: referralSource || null,
+        parrainId: resolvedParrainId,
         createdAt: new Date(),
-        registrationDate: new Date(),
       },
     });
 
-    // Create additional details based on profile type
-    if (profileType === "entreprise") {
-      await prisma.companyDetail.create({
+    if (role === "PROFESSIONAL") {
+      await prisma.professionalProfile.create({
         data: {
           userId: user.id,
-          companyName: companyName,
-          companySize: companySize,
-          companyNeeds: companyNeeds,
-          companyChallenges: companyChallenges,
-          companyWebsite: companyWebsite,
-          mainNeed: mainNeed,
-          otherSector: otherSector,
-          city: city,
-          country: country,
+          secteur,
+          centreInteret,
         },
       });
-    } else {
-      await prisma.professionalDetail.create({
+    } else if (role === "ENTREPRISE") {
+      await prisma.entrepriseProfile.create({
         data: {
           userId: user.id,
-          professionalInterests: professionalInterests,
-          city: city,
-          country: country,
+          companyName,
+          companySize,
+          roleInCompany,
+          secteur,
+          besoin,
+          site: site || null,
         },
       });
     }
@@ -116,14 +75,6 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "User data saved successfully",
       userId: user.id,
-      referralCount: parrainId
-        ? (
-            await prisma.user.findUnique({
-              where: { id: parrainId },
-              include: { _count: { select: { filleuls: true } } },
-            })
-          )?._count.filleuls
-        : 0,
     });
   } catch (error) {
     console.error("Error saving user data:", error);

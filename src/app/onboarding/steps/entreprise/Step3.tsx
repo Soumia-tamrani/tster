@@ -27,7 +27,7 @@ const secteurOptions = [
   { value: "COMMERCE", label: "Commerce" },
   { value: "FINANCE", label: "Finance" },
   { value: "SANTE", label: "Santé" },
-  { value: "ÉNERGIE_DURABILITE", label: "Énergie & Durabilité" },
+  { value: "ENERGIE_DURABILITE", label: "Énergie & Durabilité" },
   { value: "TRANSPORT", label: "Transport" },
   { value: "INDUSTRIE", label: "Industrie" },
   { value: "COMMERCE_DISTRIBUTION", label: "Commerce & Distribution" },
@@ -43,7 +43,7 @@ const formSchema = z.object({
   secteurAutre: z.string().optional(),
   besoin: z.string().min(1, "Le besoin principal est requis."),
   site: z.string().optional(),
-  decouverte: z.string().min(1, "Ce champ est requis."),
+  referralSource: z.string().min(1, "Ce champ est requis."),
   consent: z.literal(true, {
     errorMap: () => ({ message: "Vous devez accepter pour continuer." }),
   }),
@@ -62,6 +62,7 @@ export default function EntrepriseStep3({
   setCanProceed?: (can: boolean) => void;
   setOnProceed?: (cb: () => void) => void;
 }) {
+  const [isSaving, setIsSaving] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -69,13 +70,11 @@ export default function EntrepriseStep3({
       secteurAutre: "",
       besoin: "",
       site: "",
-      decouverte: "",
+      referralSource: "",
       consent: false,
     },
     mode: "onChange",
   });
-
-  const secteurValue = form.watch("secteur");
 
   useEffect(() => {
     form.reset(defaultValues);
@@ -86,13 +85,70 @@ export default function EntrepriseStep3({
     if (setOnProceed) setOnProceed(() => form.handleSubmit(handleSubmit));
   }, [form.formState.isValid, setCanProceed, setOnProceed]);
 
-  const handleSubmit = (data: any) => {
-    localStorage.setItem(
-      "onboardingEntrepriseFormData",
-      JSON.stringify({ ...(defaultValues || {}), ...data })
-    );
-    localStorage.setItem("onboardingEntrepriseCurrentStep", "2");
-    onNext(data);
+  const handleSubmit = async (data: any) => {
+    try {
+      setIsSaving(true);
+
+      const storageKey = "onboardingEntrepriseFormData";
+      const allFormData = localStorage.getItem(storageKey);
+
+      if (!allFormData) {
+        throw new Error("No form data found");
+      }
+      const formData = JSON.parse(allFormData);
+      const referrerEmail = localStorage.getItem("referrerEmail");
+
+      console.log("Step3 form data:", data);
+      console.log("Stored form data:", formData);
+
+      const payload: any = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        country: formData.country,
+        companyName: formData.companyName,
+        companySize: formData.companySize,
+        roleInCompany: formData.role,
+
+        secteur: data.secteur,
+        besoin: data.besoin,
+        site: data.site,
+        referralSource: data.referralSource,
+
+        role: "ENTREPRISE",
+        referrerEmail: referrerEmail || null,
+        profileType: "entreprise",
+        consent: data.consent,
+      };
+
+      if (data.secteur === "AUTRE" && data.secteurAutre) {
+        payload.secteurAutre = data.secteurAutre;
+      }
+
+      console.log("Final payload:", payload);
+
+      const response = await fetch("/api/onboarding/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save data");
+      }
+      const result = await response.json();
+      if (result.success) {
+        onNext(data);
+      } else {
+        throw new Error(result.error || "Failed to save data");
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -112,7 +168,7 @@ export default function EntrepriseStep3({
               name="secteur"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Secteur d'activité</FormLabel>
+                  <FormLabel>Secteur d&apos;activité</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -153,7 +209,12 @@ export default function EntrepriseStep3({
                 <FormItem>
                   <FormLabel>Besoin principal</FormLabel>
                   <FormControl>
-                    <Input {...field} className="h-12 w-full" />
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className="h-12 w-full"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,9 +225,14 @@ export default function EntrepriseStep3({
               name="site"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Site web d'entreprise.</FormLabel>
+                  <FormLabel>Site web d&apos;entreprise.</FormLabel>
                   <FormControl>
-                    <Input {...field} className="h-12 w-full" />
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      className="h-12 w-full"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -174,7 +240,7 @@ export default function EntrepriseStep3({
             />
             <FormField
               control={form.control}
-              name="decouverte"
+              name="referralSource"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Comment Avez-Vous Découvert Catchhub ?</FormLabel>
@@ -196,12 +262,12 @@ export default function EntrepriseStep3({
                           Réseaux sociaux
                         </SelectItem>
                         <SelectItem value="RECHERCHE_EN_LIGNE">
-                          Recherche en ligne
+                          Moteur de recherche
                         </SelectItem>
                         <SelectItem value="RECOMMANDATION">
-                          Recommandation d'un ami ou collègue
+                          Recommandation
                         </SelectItem>
-                        <SelectItem value="PUBLICITE">Publicité</SelectItem>
+                        <SelectItem value="PUBLICITE">Événement</SelectItem>
                         <SelectItem value="AUTRE">Autre</SelectItem>
                       </SelectContent>
                     </Select>
@@ -228,7 +294,7 @@ export default function EntrepriseStep3({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte Que Mes Données Soient Utilisées Par Catchhub Pour
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
                     Créer Mon Compte Et Recevoir Des Communications Liées À La
                     Plateforme, Conformément À La Politique De Confidentialité.
                   </FormLabel>
@@ -236,9 +302,6 @@ export default function EntrepriseStep3({
                 </FormItem>
               )}
             />
-            <FormDescription className="font-semibold text-xs mb-1 block mt-2">
-              Fields With Are Required
-            </FormDescription>
           </div>
         </div>
         <button

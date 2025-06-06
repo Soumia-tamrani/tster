@@ -1,13 +1,20 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Share2, Copy, Check, Users } from "lucide-react";
+import {
+  Copy,
+  Check,
+  Mail,
+  Facebook,
+  Linkedin,
+  Twitter,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 export default function ProStep4() {
   const [referralLink, setReferralLink] = useState("");
   const [copied, setCopied] = useState(false);
-  const [referralCount, setReferralCount] = useState(0);
   const searchParams = useSearchParams();
   const profileType = searchParams.get("profile");
 
@@ -25,43 +32,48 @@ export default function ProStep4() {
       )}&type=${profileType}`;
       setReferralLink(link);
 
-      // Get referral count from the last API response
-      const lastResponse = localStorage.getItem("lastApiResponse");
-      if (lastResponse) {
-        const { referralCount } = JSON.parse(lastResponse);
-        setReferralCount(referralCount);
-      }
-
       localStorage.removeItem("onboardingFormData");
       localStorage.removeItem("onboardingEntrepriseFormData");
       localStorage.removeItem("onboardingCurrentStep");
       localStorage.removeItem("referrerEmail");
+      localStorage.removeItem("referrerType");
       localStorage.removeItem("lastApiResponse");
     }
   }, [profileType]);
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(referralLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
+  const handleCopy = () => {
+    navigator.clipboard.writeText(referralLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Rejoignez CatchHub",
-          text: "Rejoignez-moi sur CatchHub, la plateforme de networking professionnel au Maroc!",
-          url: referralLink,
-        });
-      } catch (err) {
-        console.error("Error sharing:", err);
-      }
-    }
+  const shareToFacebook = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      referralLink
+    )}`;
+    window.open(url, "_blank", "width=600,height=400");
+  };
+
+  const shareToLinkedIn = () => {
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      referralLink
+    )}`;
+    window.open(url, "_blank", "width=600,height=400");
+  };
+
+  const shareToTwitter = () => {
+    const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+      referralLink
+    )}&text=Rejoignez-moi sur CatchHub!`;
+    window.open(url, "_blank", "width=600,height=400");
+  };
+
+  const shareViaEmail = () => {
+    const subject = "Rejoignez-moi sur CatchHub!";
+    const body = `Inscrivez-vous avec mon lien de parrainage : ${referralLink}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -75,50 +87,62 @@ export default function ProStep4() {
       </p>
 
       <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Users className="text-[#1CD5F5]" size={24} />
-          <span className="text-lg font-semibold">
-            {referralCount}{" "}
-            {referralCount === 1 ? "personne invitée" : "personnes invitées"}
-          </span>
-        </div>
-
-        <p className="text-sm text-gray-600 mb-2">Votre lien de parrainage</p>
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-6">
           <input
             type="text"
             value={referralLink}
             readOnly
-            className="flex-1 p-2 border rounded-md bg-gray-50"
+            className="flex-1 p-2 border rounded-md bg-gray-50 text-sm"
           />
           <Button
             onClick={handleCopy}
             variant="outline"
             className="whitespace-nowrap"
+            size="icon"
           >
             {copied ? <Check size={20} /> : <Copy size={20} />}
           </Button>
         </div>
 
-        <Button
-          onClick={handleShare}
-          className="w-full bg-[#1CD5F5] hover:bg-[#00b8e6] text-white"
-        >
-          <Share2 className="mr-2" size={20} />
-          Partager
-        </Button>
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600 mb-4">Partager via :</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Button
+              onClick={shareToFacebook}
+              className="flex items-center justify-center gap-2 bg-[#1877F2] hover:bg-[#1877F2]/90 text-white"
+            >
+              <Facebook size={20} />
+              <span>Facebook</span>
+            </Button>
+            <Button
+              onClick={shareToLinkedIn}
+              className="flex items-center justify-center gap-2 bg-[#0A66C2] hover:bg-[#0A66C2]/90 text-white"
+            >
+              <Linkedin size={20} />
+              <span>LinkedIn</span>
+            </Button>
+            <Button
+              onClick={shareToTwitter}
+              className="flex items-center justify-center gap-2 bg-[#1DA1F2] hover:bg-[#1DA1F2]/90 text-white"
+            >
+              <Twitter size={20} />
+              <span>Twitter</span>
+            </Button>
+            <Button
+              onClick={shareViaEmail}
+              className="flex items-center justify-center gap-2 bg-[#EA4335] hover:bg-[#EA4335]/90 text-white"
+            >
+              <Mail size={20} />
+              <span>Email</span>
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-[#F7F9FA] p-4 rounded-lg">
-        <h3 className="font-semibold text-[#013959] mb-2">
-          Avantages du parrainage
-        </h3>
-        <ul className="text-sm text-gray-600 space-y-2">
-          <li>• 1ère invitation : Accès premium pendant 1 mois</li>
-          <li>• 5 invitations : Accès premium pendant 3 mois</li>
-          <li>• 10 invitations : Accès premium pendant 6 mois</li>
-        </ul>
-      </div>
+      <p className="text-sm text-gray-500">
+        En partageant votre lien, vous permettez à vos contacts de bénéficier
+        d'avantages exclusifs.
+      </p>
     </div>
   );
 }

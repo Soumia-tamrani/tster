@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     if (field === "email") {
       const existingUser = await prisma.user.findUnique({
-        where: { Email: value },
+        where: { email: value },
       });
 
       console.log("existingUser======>", existingUser);
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       }
     } else if (field === "phone") {
       const existingUser = await prisma.user.findFirst({
-        where: { Téléphone_mobile: value },
+        where: { phone: value },
       });
 
       if (existingUser) {

@@ -11,7 +11,6 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -21,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   secteur: z.string().min(1, "Le secteur d'activité est requis."),
@@ -46,8 +44,6 @@ export default function ProStep3({
   setOnProceed?: (cb: () => void) => void;
 }) {
   const [isSaving, setIsSaving] = useState(false);
-  const searchParams = useSearchParams();
-  const profileType = searchParams.get("profile");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,30 +69,36 @@ export default function ProStep3({
     try {
       setIsSaving(true);
 
-      // Get all form data from localStorage
-      const storageKey =
-        profileType === "entreprise"
-          ? "onboardingEntrepriseFormData"
-          : "onboardingFormData";
-
-      const allFormData = localStorage.getItem(storageKey);
+      const allFormData = localStorage.getItem("onboardingFormData");
       if (!allFormData) {
         throw new Error("No form data found");
       }
 
       const formData = JSON.parse(allFormData);
+      const referrerEmail = localStorage.getItem("referrerEmail");
 
-      // Save to database
+      const mappedData = {
+        firstName: formData.firstName ?? "",
+        lastName: formData.lastName ?? "",
+        email: formData.email ?? "",
+        phone: formData.phone ?? "",
+        city: formData.city ?? "",
+        country: formData.country ?? "",
+        role: "PROFESSIONAL",
+        secteur: data?.secteur ?? "",
+        centreInteret: data?.centre ?? "",
+        referralSource: data?.source ?? "",
+        referrerEmail: referrerEmail || null,
+      };
+
+      console.log("mapped data====>", mappedData);
+
       const response = await fetch("/api/onboarding/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          ...data,
-          profileType,
-        }),
+        body: JSON.stringify(mappedData),
       });
 
       if (!response.ok) {
@@ -111,7 +113,6 @@ export default function ProStep3({
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      // Handle error (show error message to user)
     } finally {
       setIsSaving(false);
     }
@@ -134,7 +135,7 @@ export default function ProStep3({
               name="secteur"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Secteur d'activité</FormLabel>
+                  <FormLabel>Secteur d&apos;activité</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -188,7 +189,7 @@ export default function ProStep3({
               name="centre"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Centre d'intérêt professionnel</FormLabel>
+                  <FormLabel>Centre d&apos;intérêt professionnel</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -243,15 +244,17 @@ export default function ProStep3({
                         <SelectValue placeholder="Sélectionnez une option" />
                       </SelectTrigger>
                       <SelectContent className="max-h-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border-gray-100 dark:border-gray-700">
-                        <SelectItem value="SOCIAL_MEDIA">
+                        <SelectItem value="RESEAUX_SOCIAUX">
                           Réseaux sociaux
                         </SelectItem>
-                        <SelectItem value="SEARCH">
+                        <SelectItem value="RECHERCHE_EN_LIGNE">
                           Moteur de recherche
                         </SelectItem>
-                        <SelectItem value="FRIEND">Recommandation</SelectItem>
-                        <SelectItem value="EVENT">Événement</SelectItem>
-                        <SelectItem value="OTHER">Autre</SelectItem>
+                        <SelectItem value="RECOMMANDATION">
+                          Recommandation
+                        </SelectItem>
+                        <SelectItem value="PUBLICITE">Événement</SelectItem>
+                        <SelectItem value="AUTRE">Autre</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -277,27 +280,23 @@ export default function ProStep3({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte Que Mes Données Soient Utilisées Par Catchhub Pour
-                    Créer Mon Compte Et Recevoir Des Communications Liées À La
-                    Plateforme, Conformément À La Politique De Confidentialité.
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub
+                    Pour Créer Mon Compte Et Recevoir Des Communications Liées À
+                    La Plateforme, Conformément À La Politique De
+                    Confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormDescription className="font-semibold text-xs mb-1 block mt-2">
-              Fields With Are Required
-            </FormDescription>
           </div>
         </div>
-        <Button
-          type="submit"
-          className="w-full bg-[#1CD5F5] hover:bg-[#00b8e6] text-white text-base font-semibold rounded-md h-12 mb-2"
-          disabled={isSaving}
+        <button
           ref={submitRef}
-        >
-          {isSaving ? "Enregistrement..." : "Terminer"}
-        </Button>
+          type="button"
+          className="hidden"
+          aria-hidden="true"
+        ></button>
       </form>
     </Form>
   );

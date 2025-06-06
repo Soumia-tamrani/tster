@@ -50,25 +50,18 @@ const formSchema = z.object({
 });
 
 const roleOptions = [
-  { value: "ceo", label: "CEO" },
-  { value: "hr", label: "RH" },
-  { value: "manager", label: "Manager" },
-  { value: "autre", label: "Autre" },
-];
-const countryOptions = [
-  { value: "maroc", label: "Maroc" },
-  { value: "france", label: "France" },
-  { value: "espagne", label: "Espagne" },
-];
-const cityOptions = [
-  { value: "casablanca", label: "Casablanca" },
-  { value: "rabat", label: "Rabat" },
-  { value: "marrakech", label: "Marrakech" },
-];
-const companySizeOptions = [
-  { value: "pme", label: "PME" },
-  { value: "startup", label: "Startup" },
-  { value: "grande_entreprise", label: "Grande entreprise" },
+  { value: "fondateur", label: "Fondateur / Co-fondateur" },
+  { value: "dirigeant", label: "Dirigeant(e) / CEO / Président(e)" },
+  { value: "rh", label: "Responsable RH / Recruteur" },
+  { value: "commercial", label: "Responsable commercial / ventes" },
+  { value: "marketing", label: "Responsable marketing / communication" },
+  { value: "partenariats", label: "Responsable des partenariats" },
+  {
+    value: "produit",
+    label: "Directeur / Responsable produit (Product Owner)",
+  },
+  { value: "technique", label: "Responsable technique / CTO / Lead Dev" },
+  { value: "administratif", label: "Responsable administratif / financier" },
 ];
 
 export default function EntrepriseStep1({
@@ -88,20 +81,22 @@ export default function EntrepriseStep1({
   const [isCheckingPhone, setIsCheckingPhone] = useState(false);
   const [phoneErrors, setPhoneErrors] = useState<Record<string, string>>({});
 
+  const getDefaultFormValues = (providedDefaults?: any) => ({
+    firstName: providedDefaults?.firstName || "",
+    lastName: providedDefaults?.lastName || "",
+    role: providedDefaults?.role || "",
+    country: providedDefaults?.country || "",
+    email: providedDefaults?.email || "",
+    phone: providedDefaults?.phone || "",
+    companyName: providedDefaults?.companyName || "",
+    city: providedDefaults?.city || "",
+    companySize: providedDefaults?.companySize || "",
+    consent: providedDefaults?.consent || false,
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValues || {
-      firstName: "",
-      lastName: "",
-      role: "",
-      country: "",
-      email: "",
-      phone: "",
-      companyName: "",
-      city: "",
-      companySize: "",
-      consent: false,
-    },
+    defaultValues: getDefaultFormValues(defaultValues),
     mode: "onChange",
   });
 
@@ -110,33 +105,35 @@ export default function EntrepriseStep1({
   };
 
   const handlePhoneBlur = async () => {
-    const phone = form.getValues("phone").trim();
+    const phone = (form.getValues("phone") || "").trim();
     if (!phone) {
       setPhoneErrors({ phone: "Le numéro de téléphone est requis" });
       return false;
     }
- 
+
     const validation = validatePhoneFormat(phone, selectedCountryCode);
     if (!validation.isValid) {
       setPhoneErrors({ phone: validation.error || "Format invalide" });
       return false;
     }
- 
+
     setPhoneErrors({});
     return true;
   };
- 
+
   const getPhoneExample = (): string => {
-    const country = updatedCountriesList.find((c) => c.code === selectedCountryCode);
+    const country = updatedCountriesList.find(
+      (c) => c.code === selectedCountryCode
+    );
     const limits = getPhoneLengthLimits(selectedCountryCode);
- 
+
     let lengthInfo = "";
     if (limits.exactLength) {
       lengthInfo = ` (exactement ${limits.exactLength} chiffres)`;
     } else if (limits.min && limits.max) {
       lengthInfo = ` (${limits.min}-${limits.max} chiffres)`;
     }
- 
+
     const countryName = country?.name || "ce pays";
     return `Format pour ${countryName}${lengthInfo}`;
   };
@@ -155,7 +152,7 @@ export default function EntrepriseStep1({
   const handlePhoneChange = (value?: string) => {
     const cleanValue = value ? toE164Format(value) : "";
     form.setValue("phone", cleanValue);
- 
+
     if (cleanValue && cleanValue.length >= 3) {
       const validation = validatePhoneFormat(cleanValue, selectedCountryCode);
       if (!validation.isValid) {
@@ -171,11 +168,11 @@ export default function EntrepriseStep1({
   const handleCountryChange = (countryName: string) => {
     const selected = countries.find((c) => c.name === countryName);
     if (!selected) return;
- 
+
     setSelectedCountryCode(selected.code);
     form.setValue("country", selected.name);
     setPhoneErrors({});
- 
+
     const currentPhone = form.getValues("phone");
     if (currentPhone) {
       setTimeout(() => {
@@ -187,8 +184,13 @@ export default function EntrepriseStep1({
     }
   };
 
-  const getPhoneLengthLimits = (countryCode: string): { exactLength?: number; min?: number; max?: number } => {
-    const limits: Record<string, { exactLength?: number; min?: number; max?: number }> = {
+  const getPhoneLengthLimits = (
+    countryCode: string
+  ): { exactLength?: number; min?: number; max?: number } => {
+    const limits: Record<
+      string,
+      { exactLength?: number; min?: number; max?: number }
+    > = {
       MA: { exactLength: 12 },
       FR: { exactLength: 11 },
       CA: { exactLength: 11 },
@@ -213,19 +215,22 @@ export default function EntrepriseStep1({
     return phone.replace(/\D/g, "");
   };
 
-  const validatePhoneFormat = (phone: string, countryCode: string): { isValid: boolean; error?: string } => {
+  const validatePhoneFormat = (
+    phone: string,
+    countryCode: string
+  ): { isValid: boolean; error?: string } => {
     if (!phone) {
       return { isValid: false, error: "Le numéro de téléphone est requis" };
     }
- 
+
     const country = updatedCountriesList.find((c) => c.code === countryCode);
     if (!country) {
       return { isValid: false, error: "Pays non reconnu" };
     }
- 
+
     const cleanPhone = cleanPhoneNumber(phone);
     const limits = getPhoneLengthLimits(countryCode);
- 
+
     if (limits.exactLength) {
       if (cleanPhone.length !== limits.exactLength) {
         return { isValid: false, error: "Format invalide" };
@@ -235,27 +240,30 @@ export default function EntrepriseStep1({
         return { isValid: false, error: "Format invalide" };
       }
     }
- 
+
     let phoneToValidate = phone;
- 
+
     if (!phoneToValidate.startsWith(country.prefix)) {
       if (phoneToValidate.startsWith("0")) {
         phoneToValidate = country.prefix + phoneToValidate.substring(1);
       } else if (phoneToValidate.startsWith("+")) {
         if (!phoneToValidate.startsWith(country.prefix)) {
-          return { isValid: false, error: "Format invalide pour " + country.name };
+          return {
+            isValid: false,
+            error: "Format invalide pour " + country.name,
+          };
         }
       } else {
         phoneToValidate = country.prefix + phoneToValidate;
       }
     }
- 
+
     const isValid = isValidPhoneForCountry(phoneToValidate, countryCode);
- 
+
     if (!isValid) {
       return { isValid: false, error: "Format invalide pour " + country.name };
     }
- 
+
     return { isValid: true };
   };
 
@@ -370,7 +378,7 @@ export default function EntrepriseStep1({
             Merci de compléter ces informations pour poursuivre votre
             inscription.
             <br />
-            Tous les champs marqués d'un{" "}
+            Tous les champs marqués d&apos;un{" "}
             <span className="text-[#1CD5F5]">*</span> sont obligatoires
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
@@ -410,7 +418,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Votre Rôle Dans L'entreprise{" "}
+                    Votre Rôle Dans L&apos;entreprise
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -543,7 +551,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Nom De L'entreprise{" "}
+                    Nom De L&apos;entreprise
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -574,7 +582,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Taille De L'entreprise{" "}
+                    Taille De L&apos;entreprise{" "}
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -591,11 +599,20 @@ export default function EntrepriseStep1({
                         <SelectValue placeholder="Taille de l'entreprise" />
                       </SelectTrigger>
                       <SelectContent>
-                        {companySizeOptions.map((opt) => (
-                          <SelectItem key={opt.value} value={opt.value}>
-                            {opt.label}
+                        <SelectContent>
+                          <SelectItem value="PETITE_ENTREPRISE">
+                            Petite entreprise (1 à 10)
                           </SelectItem>
-                        ))}
+                          <SelectItem value="ENTREPRISE_CROISSANCE">
+                            Entreprise en croissance (11 à 50)
+                          </SelectItem>
+                          <SelectItem value="MOYENNE_ENTREPRISE">
+                            Moyenne entreprise (PME) (51 à 250)
+                          </SelectItem>
+                          <SelectItem value="GRANDE_ENTREPRISE">
+                            Grande entreprise (251 et plus)
+                          </SelectItem>
+                        </SelectContent>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -621,17 +638,15 @@ export default function EntrepriseStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J'accepte Que Mes Données Soient Utilisées Par Catchhub Pour
-                    Créer Mon Compte Et Recevoir Des Communications Liées À La
-                    Plateforme, Conformément À La Politique De Confidentialité.
+                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub
+                    Pour Créer Mon Compte Et Recevoir Des Communications Liées À
+                    La Plateforme, Conformément À La Politique De
+                    Confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormDescription className="font-semibold text-xs mb-1 block mt-2">
-              Fields With Are Required
-            </FormDescription>
           </div>
         </div>
         <button
