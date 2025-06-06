@@ -630,10 +630,9 @@ export default function EntrepriseStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub
-                    Pour Créer Mon Compte Et Recevoir Des Communications Liées À
-                    La Plateforme, Conformément À La Politique De
-                    Confidentialité.
+                    J&apos;accepte que mes données soient utilisées par Catchhub pour
+                    créer mon compte et recevoir des communications liées à la
+                    plateforme, conformément à la politique de confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
