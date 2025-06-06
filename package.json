@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push && NEXT_DISABLE_ESLINT=true next build",
+    "build": "ts-node prisma/migrate.ts && NEXT_DISABLE_ESLINT=true next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
@@ -54,6 +54,7 @@
     "eslint-config-next": "15.3.3",
     "prisma": "^6.9.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"
