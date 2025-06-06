@@ -3,7 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
+.PhoneInputInput {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 @theme inline {
   --color-background: var(--background);
