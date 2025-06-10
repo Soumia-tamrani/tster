@@ -332,18 +332,18 @@ export default function ProStep1({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-semibold text-[#013959] mb-2">
-            Informations personnelles
+        <div className="max-w-2xl mx-auto ">
+          <h2 className="text-2xl font-semibold text-[#013959] mb-3 mt-9">
+            Informations professionnelles
           </h2>
-          <p className="text-[#7E8B93] text-sm mb-6">
+          <p className="text-[#7E8B93] text-sm mb-10">
             Merci de compléter ces informations pour poursuivre votre
             inscription.
             <br />
-            Tous les champs marqués d&apos;un
+            Tous les champs marqués par {""}
             <span className="text-[#1CD5F5]">*</span> sont obligatoires
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6  mb-10">
             <FormField
               control={form.control}
               name="firstName"
@@ -495,7 +495,6 @@ export default function ProStep1({
   </div>
 
           </div>
-         
           <div className="mb-4">
             <FormField
               control={form.control}

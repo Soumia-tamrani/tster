@@ -155,12 +155,11 @@ export default function MultistepWrap({
         className="relative flex flex-col items-center justify-center pt-8 pb-8 md:pt-12 md:pb-12 bg-transparent z-10 w-[90vw] max-w-[700px]"
         style={{ marginTop: 40 }}
       >
-        <h1 className="text-2xl md:text-4xl font-semibold mb-2 text-white text-center">
+        <h1 className="text-2xl md:text-4xl font-semibold mb-5 text-white text-center">
           Dynamisez votre carrière
         </h1>
-        <p className="text-center max-w-xs md:max-w-xl mx-auto text-sm md:text-lg text-white opacity-80">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod,
-          nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
+        <p className="text-center max-w-xs md:max-w-lg mx-auto text-sm md:text-lg text-white opacity-80" style={{ fontFamily: "Poppins , sans-serif", fontSize: "16px" }}>
+          Inscrivez-vous gratuitement et accédez à nos services essentiels. Découvrez des services complémentaires pour optimiser votre progression.
         </p>
       </div>
       <div className="bg-white rounded-[18px] md:rounded-[22px] mt-[10vw] md:mt-[20px] shadow-[0_8px_8px_rgba(171,171,171,0.03),0_11px_11px_rgba(171,171,171,0.05),0_3px_6px_rgba(171,171,171,0.06)] w-[95vw] max-w-[1013px] min-h-[60vh] md:min-h-[799.44px] p-4 md:p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border border-[#E0E0E0]">
@@ -203,7 +202,7 @@ export default function MultistepWrap({
                 <span>Chargement...</span>
               ) : step < steps.length - 1 ? (
                 <>
-                  suivant <ArrowRight size={20} />
+                  Suivant <ArrowRight size={20} />
                 </>
               ) : (
                 <>

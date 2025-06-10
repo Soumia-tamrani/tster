@@ -350,15 +350,15 @@ export default function EntrepriseStep1({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="flex flex-col max-w-2xl mx-auto mt-3 gap-4 ">
-          <h2 className="text-2xl font-semibold text-[#013959] mb-2">
+          <h2 className="text-2xl font-semibold text-[#013959] mb-9">
             Informations entreprise
           </h2>
           <p className="text-[#7E8B93] text-sm mb-6">
             Merci de compléter ces informations pour poursuivre votre
             inscription.
             <br />
-            Tous les champs marqués d&apos;un{" "}
-            <span className="text-[#1CD5F5]">*</span> sont obligatoires
+            Tous les champs marqués par {" "}
+            <span className="text-[#1CD5F5]"> * </span> sont obligatoires
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
             <FormField

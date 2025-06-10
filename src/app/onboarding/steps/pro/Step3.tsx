@@ -121,15 +121,14 @@ export default function ProStep3({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto mt-6">
           <h2 className="text-2xl font-semibold text-[#013959] mb-2">
             Votre profil professionnel
           </h2>
-          <p className="text-[#7E8B93] text-sm mb-6">
-            Parlez-nous un peu de vous pour mieux adapter votre expérience sur
-            Catchhub.
+          <p className="text-[#7E8B93] text-sm mb-8">
+            Parlez-nous un peu de vous pour mieux adapter votre expérience sur Catchub. 
           </p>
-          <div className="flex flex-col gap-6 mb-4">
+          <div className="flex flex-col gap-6 mb-10">
             <FormField
               control={form.control}
               name="secteur"

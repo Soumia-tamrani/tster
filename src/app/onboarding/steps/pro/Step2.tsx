@@ -141,13 +141,12 @@ export default function ProStep2({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="max-w-2xl py-2 mx-auto">
-          <h2 className="text-2xl font-semibold text-[#013959] mb-2">
+        <div className="max-w-2xl py-2 mx-auto mt-6">
+          <h2 className="text-2xl font-semibold text-[#013959] mb-6" style={{fontFamily: "Montserrat, sans-serif", fontSize: "22px"}}>
             Vérification de votre email
           </h2>
-          <p className="text-[#7E8B93] text-sm mb-6">
-            Veuillez confirmer votre adresse e-mail afin de garantir la sécurité
-            de votre compte et de pouvoir continuer
+          <p className="text-[#7E8B93] text-sm mb-7" style={{fontFamily: "Poppins, sans-serif", fontSize: "13px"}}>
+            Veuillez confirmer votre adresse e-mail afin de garantir la sécurité de votre compte et de pouvoir continuer
           </p>
 
           <div className="mb-4">
@@ -156,7 +155,7 @@ export default function ProStep2({
                 Un code de vérification a été envoyé à votre adresse.
               </div>
             )}
-            <div className="rounded-md bg-blue-50 border border-blue-200 text-blue-900 px-4 py-2 flex items-center gap-2 text-sm">
+            <div className="rounded-md bg-blue-50 border border-blue-200 text-blue-900 px-4 py-2 flex items-center gap-2 text-sm mb-7">
               <Mail className="text-[#1CD5F5] mr-2" size={18} />
               <span className="py-2">
                 Veuillez consulter votre boîte de réception (ou vos spams)
@@ -171,9 +170,9 @@ export default function ProStep2({
               control={form.control}
               name="otp"
               render={({ field }) => (
-                <FormItem className="mb-4 flex flex-col items-center">
-                  <FormLabel className="self-start mb-2">
-                    Code De Vérification
+                <FormItem className="mb-7 flex flex-col items-center">
+                  <FormLabel className="self-start mb-6">
+                    Code de vérification
                   </FormLabel>
                   <FormControl>
                     <InputOTP
