@@ -601,23 +601,22 @@ export default function Home() {
                 Légal
               </h4>
               <ul className="space-y-2">
-                 <li>
-               <Link
-    href="/legal/CGU"
-    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
-  >
-    Conditions d'utilisation
-  </Link>
-</li>
-             <li>
-  <Link
-    href="/legal"
-    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
-  >
-    Politique de confidentialité
-  </Link>
-</li>
-                
+                <li>
+                  <Link
+                    href="/legal/CGU"
+                    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
+                  >
+                    Conditions d'utilisation
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/legal"
+                    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
+                  >
+                    Politique de confidentialité
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
