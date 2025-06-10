@@ -78,6 +78,7 @@ export default function ProStep1({
       city: "",
       consent: false,
     },
+    mode: "onChange",
   });
 
   const getCurrentCountryCode = (): string => {
@@ -271,7 +272,6 @@ export default function ProStep1({
       form.clearErrors("email");
       form.clearErrors("phone");
 
-      // Check email uniqueness
       const emailResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -291,7 +291,6 @@ export default function ProStep1({
         return;
       }
 
-      // Check phone uniqueness
       const phoneResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -374,7 +373,9 @@ export default function ProStep1({
                   <FormControl>
                     <Input className="h-12" {...field} id="firstName" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -389,7 +390,9 @@ export default function ProStep1({
                   <FormControl>
                     <Input className="h-12" {...field} id="lastName" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -409,14 +412,15 @@ export default function ProStep1({
                       type="email"
                       onChange={(e) => {
                         field.onChange(e);
-                        // Clear email errors when user starts typing
                         if (form.formState.errors.email) {
                           form.clearErrors("email");
                         }
                       }}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -438,7 +442,9 @@ export default function ProStep1({
                       countries={countries}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -455,7 +461,9 @@ export default function ProStep1({
                     <FormControl>
                       <Input className="h-12" {...field} id="city" />
                     </FormControl>
-                    <FormMessage />
+                    <div className="min-h-[20px]">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />

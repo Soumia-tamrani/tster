@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -6,15 +8,9 @@ import {
   CheckCircle,
   Users,
   Building2,
-  Calendar,
-  Mail,
-  Globe,
-  Shield,
   Target,
-  UserSearch,
   UserSearchIcon,
   SearchCheck,
-  CalendarCheck,
   CalendarCheck2,
   HandshakeIcon,
 } from "lucide-react";
@@ -607,8 +603,7 @@ export default function Home() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                  target="_blank"
-                    href="https://itskillsourcing.sharepoint.com/:w:/s/KnovaDev/EWJW4iZl3NxPtzLG3RKNe2QBM9Si9PWRLjq1-TbvKoVuyA?e=deDy4o"
+                    href="/legal/CGU"
                     className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
                   >
                     Conditions d'utilisation
@@ -616,18 +611,10 @@ export default function Home() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/legal"
                     className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
                   >
                     Politique de confidentialité
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
-                  >
-                    Cookies
                   </Link>
                 </li>
               </ul>

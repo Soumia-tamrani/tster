@@ -291,7 +291,6 @@ export default function EntrepriseStep1({
       form.clearErrors("email");
       form.clearErrors("phone");
 
-      // Check email uniqueness
       const emailResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -311,7 +310,6 @@ export default function EntrepriseStep1({
         return;
       }
 
-      // Check phone uniqueness
       const phoneResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -373,7 +371,7 @@ export default function EntrepriseStep1({
             Merci de compléter ces informations pour poursuivre votre
             inscription.
             <br />
-            Tous les champs marqués par {" "}
+            Tous les champs marqués par{" "}
             <span className="text-[#1CD5F5]"> * </span> sont obligatoires
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mb-7">
@@ -388,7 +386,9 @@ export default function EntrepriseStep1({
                   <FormControl>
                     <Input {...field} id="firstName" className="h-12" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -403,7 +403,9 @@ export default function EntrepriseStep1({
                   <FormControl>
                     <Input {...field} id="lastName" className="h-12" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -438,7 +440,9 @@ export default function EntrepriseStep1({
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -460,7 +464,9 @@ export default function EntrepriseStep1({
                       countries={countries}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -482,7 +488,9 @@ export default function EntrepriseStep1({
                         className="h-12"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <div className="min-h-[20px]">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -550,7 +558,9 @@ export default function EntrepriseStep1({
                   <FormControl>
                     <Input {...field} id="companyName" className="h-12" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -565,7 +575,9 @@ export default function EntrepriseStep1({
                   <FormControl>
                     <Input {...field} id="city" className="h-12" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -609,7 +621,9 @@ export default function EntrepriseStep1({
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
