@@ -69,12 +69,19 @@ export default function ProStep1({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: getDefaultFormValues(defaultValues),
-    mode: "onChange",
+    defaultValues: defaultValues || {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      country: "Maroc",
+      city: "",
+      consent: false,
+    },
   });
 
   const getCurrentCountryCode = (): string => {
-    return selectedCountryCode || "MA";
+    return selectedCountryCode || "Maroc";
   };
 
   const handlePhoneBlur = async () => {
@@ -426,6 +433,7 @@ export default function ProStep1({
                   <FormControl>
                     <CountrySelector
                       value={field.value}
+                      defaultValue= "Maroc"
                       onChange={handleCountryChange}
                       onPrefixChange={() => {}}
                       error={form.formState.errors.country?.message}
@@ -436,71 +444,79 @@ export default function ProStep1({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Ville <span className="text-[#1CD5F5]">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input className="h-12" {...field} id="city" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+  {/* Champ Ville */}
+  <div className="flex-1 min-w-[250px]">
+    <FormField
+      control={form.control}
+      name="city"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>
+            Ville <span className="text-[#1CD5F5]">*</span>
+          </FormLabel>
+          <FormControl>
+            <Input className="h-12" {...field} id="city" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  </div>
+
+  {/* Champ Téléphone */}
+  <div className="flex-1 min-w-[250px]">
+    <FormField
+      control={form.control}
+      name="phone"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>
+            Téléphone <span className="text-[#1CD5F5]">*</span>
+          </FormLabel>
+          <FormControl>
+            <div className="relative">
+              <PhoneInput
+                defaultCountry={getCurrentCountryCode() as any}
+                value={field.value || undefined}
+                onChange={handlePhoneChange}
+                onBlur={handlePhoneBlur}
+                className={cn(
+                  "w-full h-12 px-3 rounded-lg border bg-white",
+                  phoneErrors.phone || form.formState.errors.phone
+                    ? "border-red-500"
+                    : "border-gray-300 focus:border-blue-500",
+                )}
+                international
+                countryCallingCodeEditable={false}
+                placeholder="Entrez votre numéro de téléphone"
+                style={{
+                  "--PhoneInputCountryFlag-height": "1em",
+                  "--PhoneInputCountrySelectArrow-opacity": "0.5",
+                }}
+              />
+              {isCheckingPhone && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                </div>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Téléphone <span className="text-[#1CD5F5]">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <div
-                      className={cn(
-                        "rounded-lg bg-white h-12 border relative",
-                        phoneErrors.phone || form.formState.errors.phone
-                          ? "border-red-500"
-                          : "border-gray-300 focus-within:border-blue-500"
-                      )}
-                    >
-                      <PhoneInput
-                        defaultCountry={getCurrentCountryCode() as any}
-                        value={field.value || undefined}
-                        onChange={handlePhoneChange}
-                        onBlur={handlePhoneBlur}
-                        className="w-full h-full border-none focus:outline-none focus:ring-0"
-                        international
-                        countryCallingCodeEditable={false}
-                        placeholder="Entrez votre numéro de téléphone"
-                      />
-                      {isCheckingPhone && (
-                        <div className="absolute right-3 top-3 pointer-events-none">
-                          <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                        </div>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                  {phoneErrors.phone || form.formState.errors.phone ? (
-                    <p className="text-red-500 text-xs flex items-center mt-1 animate-in fade-in">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {phoneErrors.phone ||
-                        form.formState.errors.phone?.message}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {getPhoneExample()}
-                    </p>
-                  )}
-                </FormItem>
-              )}
-            />
+            </div>
+          </FormControl>
+          <FormMessage />
+          {phoneErrors.phone ? (
+            <p className="text-red-500 text-xs flex items-center mt-1">
+              <AlertCircle className="mr-1 h-4 w-4" />
+              {phoneErrors.phone}
+            </p>
+          ) : (
+            <p className="text-xs text-gray-500 mt-1">{getPhoneExample()}</p>
+          )}
+        </FormItem>
+      )}
+    />
+  </div>
+
           </div>
+         
           <div className="mb-4">
             <FormField
               control={form.control}

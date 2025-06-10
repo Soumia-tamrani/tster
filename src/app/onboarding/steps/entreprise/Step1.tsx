@@ -459,6 +459,7 @@ export default function EntrepriseStep1({
                     <CountrySelector
                       value={field.value}
                       onChange={handleCountryChange}
+                      defaultValue="Maroc"
                       onPrefixChange={() => {}}
                       error={form.formState.errors.country?.message}
                       countries={countries}
@@ -468,6 +469,8 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
+              <div className="flex-1 min-w-[250px]">
+
             <FormField
               control={form.control}
               name="email"
@@ -489,6 +492,9 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
+              </div>
+              <div className="flex-1 min-w-[250px]">
+
             <FormField
               control={form.control}
               name="phone"
@@ -500,7 +506,7 @@ export default function EntrepriseStep1({
                   <FormControl>
                     <div
                       className={cn(
-                        "rounded-lg bg-white h-12 border relative",
+                        "rounded-lg bg-white h-12 border relative pl-3",
                         phoneErrors.phone || form.formState.errors.phone
                           ? "border-red-500"
                           : "border-gray-300 focus-within:border-blue-500"
@@ -537,6 +543,8 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
+              </div>
+
             <FormField
               control={form.control}
               name="companyName"
