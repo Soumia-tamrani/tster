@@ -197,6 +197,10 @@ export default function MultistepWrap({
               }}
               disabled={canProceed === false || loading}
               className="w-full md:w-[200px] h-12 md:h-[60px] bg-[#1CD5F5] text-white rounded-[12px] text-lg font-semibold flex items-center justify-center gap-2 hover:bg-[#00b8e6] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ fontFamily: "Poppins, sans-serif",
+                fontSize: "17px",
+                letterSpacing: "0.02em"
+               }}
             >
               {loading ? (
                 <span>Chargement...</span>

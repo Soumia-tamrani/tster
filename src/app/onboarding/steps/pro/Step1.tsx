@@ -352,7 +352,7 @@ export default function ProStep1({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="max-w-2xl mx-auto ">
-          <h2 className="text-2xl font-semibold text-[#013959] mb-3 mt-9">
+          <h2 className="text-2xl font-semibold text-[#013959] mb-3 mt-9 ">
             Informations professionnelles
           </h2>
           <p className="text-[#7E8B93] text-sm mb-10">
