@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -6,19 +8,12 @@ import {
   CheckCircle,
   Users,
   Building2,
-  Calendar,
-  Mail,
-  Globe,
-  Shield,
   Target,
-  UserSearch,
   UserSearchIcon,
   SearchCheck,
-  CalendarCheck,
   CalendarCheck2,
   HandshakeIcon,
 } from "lucide-react";
-import { useState } from "react";
 import NewsletterSection from "@/components/Newsletter";
 import Analytics from "@/components/Analytics";
 
@@ -615,14 +610,14 @@ export default function Home() {
                     Conditions d'utilisation
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
-                  >
-                    Politique de confidentialité
-                  </Link>
-                </li>
+             <li>
+  <Link
+    href="app/legal/page"
+    className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
+  >
+    Politique de confidentialité
+  </Link>
+</li>
                 <li>
                   <Link
                     href="#"
