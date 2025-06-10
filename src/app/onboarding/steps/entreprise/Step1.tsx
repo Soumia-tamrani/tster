@@ -289,31 +289,45 @@ export default function EntrepriseStep1({
   const handleSubmit = async (data: any) => {
     try {
       form.clearErrors("email");
+      form.clearErrors("phone");
 
-      const response = await fetch("/api/email/check-unique", {
+      // Check email uniqueness
+      const emailResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ field: "email", value: data.email }),
       });
 
-      if (!response.ok) {
+      if (!emailResponse.ok) {
         throw new Error("Network response was not ok");
       }
 
-      const result = await response.json();
-      console.log("API Response:", result);
-
-      if (!result.isUnique) {
-        console.log("Setting email error:", result.message);
+      const emailResult = await emailResponse.json();
+      if (!emailResult.isUnique) {
         form.setError("email", {
           type: "manual",
-          message: result.message,
+          message: emailResult.message,
         });
+        return;
+      }
 
-        setTimeout(() => {
-          console.log("Current form errors:", form.formState.errors);
-        }, 100);
+      // Check phone uniqueness
+      const phoneResponse = await fetch("/api/email/check-unique", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ field: "phone", value: data.phone }),
+      });
 
+      if (!phoneResponse.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const phoneResult = await phoneResponse.json();
+      if (!phoneResult.isUnique) {
+        form.setError("phone", {
+          type: "manual",
+          message: phoneResult.message,
+        });
         return;
       }
 
@@ -340,7 +354,9 @@ export default function EntrepriseStep1({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      if (!response.ok) throw new Error("Erreur lors de l'envoi de l'email");
+      if (!response.ok) {
+        console.log("Erreur lors de l'envoi de l'email");
+      }
     } catch (err) {
       console.error("Erreur:", err);
     }
@@ -448,81 +464,79 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
-              <div className="flex-1 min-w-[250px]">
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Email Professionnel{" "}
-                    <span className="text-[#1CD5F5]">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      id="email"
-                      type="email"
-                      className="h-12"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-              </div>
-              <div className="flex-1 min-w-[250px]">
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Téléphone <span className="text-[#1CD5F5]">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <div
-                      className={cn(
-                        "rounded-lg bg-white h-12 border relative pl-3",
-                        phoneErrors.phone || form.formState.errors.phone
-                          ? "border-red-500"
-                          : "border-gray-300 focus-within:border-blue-500"
-                      )}
-                    >
-                      <PhoneInput
-                        defaultCountry={getCurrentCountryCode() as any}
-                        value={field.value || undefined}
-                        onChange={handlePhoneChange}
-                        onBlur={handlePhoneBlur}
-                        className="w-full h-full border-none focus:outline-none focus:ring-0"
-                        international
-                        countryCallingCodeEditable={false}
-                        placeholder="Entrez votre numéro de téléphone"
+            <div className="flex-1 min-w-[250px]">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Email Professionnel{" "}
+                      <span className="text-[#1CD5F5]">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        id="email"
+                        type="email"
+                        className="h-12"
                       />
-                      {isCheckingPhone && (
-                        <div className="absolute right-3 top-3 pointer-events-none">
-                          <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                        </div>
-                      )}
-                    </div>
-                  </FormControl>
-                  {phoneErrors.phone || form.formState.errors.phone ? (
-                    <p className="text-red-500 text-xs flex items-center mt-1 animate-in fade-in">
-                      <AlertCircle className="mr-1 h-4 w-4" />
-                      {phoneErrors.phone ||
-                        form.formState.errors.phone?.message}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {getPhoneExample()}
-                    </p>
-                  )}
-                </FormItem>
-              )}
-            />
-              </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex-1 min-w-[250px]">
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Téléphone <span className="text-[#1CD5F5]">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div
+                        className={cn(
+                          "rounded-lg bg-white h-12 border relative pl-3",
+                          phoneErrors.phone || form.formState.errors.phone
+                            ? "border-red-500"
+                            : "border-gray-300 focus-within:border-blue-500"
+                        )}
+                      >
+                        <PhoneInput
+                          defaultCountry={getCurrentCountryCode() as any}
+                          value={field.value || undefined}
+                          onChange={handlePhoneChange}
+                          onBlur={handlePhoneBlur}
+                          className="w-full h-full border-none focus:outline-none focus:ring-0"
+                          international
+                          countryCallingCodeEditable={false}
+                          placeholder="Entrez votre numéro de téléphone"
+                        />
+                        {isCheckingPhone && (
+                          <div className="absolute right-3 top-3 pointer-events-none">
+                            <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                          </div>
+                        )}
+                      </div>
+                    </FormControl>
+                    {phoneErrors.phone || form.formState.errors.phone ? (
+                      <p className="text-red-500 text-xs flex items-center mt-1 animate-in fade-in">
+                        <AlertCircle className="mr-1 h-4 w-4" />
+                        {phoneErrors.phone ||
+                          form.formState.errors.phone?.message}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {getPhoneExample()}
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -617,9 +631,10 @@ export default function EntrepriseStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte que mes données soient utilisées par Catchhub pour
-                    créer mon compte et recevoir des communications liées à la
-                    plateforme, conformément à la politique de confidentialité.
+                    J&apos;accepte que mes données soient utilisées par Catchhub
+                    pour créer mon compte et recevoir des communications liées à
+                    la plateforme, conformément à la politique de
+                    confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>

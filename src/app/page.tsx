@@ -132,7 +132,7 @@ export default function Home() {
             </div>
 
             <div className="flex items-center justify-center animate-fade-in delay-200">
-              <div className="relative w-full h-[250px] sm:h-[350px] md:h-[400px] lg:h-[450px] rounded-2xl shadow-xl overflow-hidden group hover:shadow-blue-500/20 dark:hover:shadow-purple-500/20 transition-shadow duration-500 bg-white">
+              <div className="relative w-full h-[200px] sm:h-[350px] md:h-[400px] lg:h-[450px] rounded-2xl shadow-xl overflow-hidden group hover:shadow-blue-500/20 dark:hover:shadow-purple-500/20 transition-shadow duration-500 bg-white">
                 <video
                   ref={(el) => {
                     if (el) {

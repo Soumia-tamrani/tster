@@ -65,8 +65,8 @@ export async function POST(request: NextRequest) {
           companySize,
           roleInCompany,
           secteur,
-          besoin,
-          site: site || null,
+          besoin: besoin || [],
+          site,
         },
       });
     }

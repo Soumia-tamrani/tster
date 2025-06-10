@@ -41,13 +41,15 @@ model ProfessionalProfile {
 model EntrepriseProfile {
   id            String      @id @default(uuid())
   userId        String      @unique
+  user          User        @relation(fields: [userId], references: [id])
   companyName   String
   companySize   CompanySize
   roleInCompany String
-  secteur       Secteur
-  besoin        String
-  site          String?
-  user          User        @relation(fields: [userId], references: [id])
+  secteur       String
+  besoin        String[]
+  site          String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model CookieConsent {
@@ -73,8 +75,9 @@ enum UserRole {
 }
 
 enum CompanySize {
-  STARTUP
-  PME
+  PETITE_ENTREPRISE
+  ENTREPRISE_CROISSANCE
+  MOYENNE_ENTREPRISE
   GRANDE_ENTREPRISE
 }
 

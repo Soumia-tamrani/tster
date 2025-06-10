@@ -269,25 +269,44 @@ export default function ProStep1({
   const handleSubmit = async (data: any) => {
     try {
       form.clearErrors("email");
+      form.clearErrors("phone");
 
-      const response = await fetch("/api/email/check-unique", {
+      // Check email uniqueness
+      const emailResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ field: "email", value: data.email }),
       });
 
-      if (!response.ok) {
+      if (!emailResponse.ok) {
         throw new Error("Network response was not ok");
       }
 
-      const result = await response.json();
-      console.log("API Response:", result);
-
-      if (!result.isUnique) {
-        console.log("Setting email error:", result.message);
+      const emailResult = await emailResponse.json();
+      if (!emailResult.isUnique) {
         form.setError("email", {
           type: "manual",
-          message: result.message,
+          message: emailResult.message,
+        });
+        return;
+      }
+
+      // Check phone uniqueness
+      const phoneResponse = await fetch("/api/email/check-unique", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ field: "phone", value: data.phone }),
+      });
+
+      if (!phoneResponse.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const phoneResult = await phoneResponse.json();
+      if (!phoneResult.isUnique) {
+        form.setError("phone", {
+          type: "manual",
+          message: phoneResult.message,
         });
         return;
       }
@@ -412,7 +431,7 @@ export default function ProStep1({
                   <FormControl>
                     <CountrySelector
                       value={field.value}
-                      defaultValue= "Maroc"
+                      defaultValue="Maroc"
                       onChange={handleCountryChange}
                       onPrefixChange={() => {}}
                       error={form.formState.errors.country?.message}
@@ -423,78 +442,80 @@ export default function ProStep1({
                 </FormItem>
               )}
             />
-  {/* Champ Ville */}
-  <div className="flex-1 min-w-[250px]">
-    <FormField
-      control={form.control}
-      name="city"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>
-            Ville <span className="text-[#1CD5F5]">*</span>
-          </FormLabel>
-          <FormControl>
-            <Input className="h-12" {...field} id="city" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  </div>
-
-  {/* Champ Téléphone */}
-  <div className="flex-1 min-w-[250px]">
-    <FormField
-      control={form.control}
-      name="phone"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>
-            Téléphone <span className="text-[#1CD5F5]">*</span>
-          </FormLabel>
-          <FormControl>
-            <div className="relative">
-              <PhoneInput
-                defaultCountry={getCurrentCountryCode() as any}
-                value={field.value || undefined}
-                onChange={handlePhoneChange}
-                onBlur={handlePhoneBlur}
-                className={cn(
-                  "w-full h-12 px-3 rounded-lg border bg-white",
-                  phoneErrors.phone || form.formState.errors.phone
-                    ? "border-red-500"
-                    : "border-gray-300 focus:border-blue-500",
+            {/* Champ Ville */}
+            <div className="flex-1 min-w-[250px]">
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Ville <span className="text-[#1CD5F5]">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input className="h-12" {...field} id="city" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                international
-                countryCallingCodeEditable={false}
-                placeholder="Entrez votre numéro de téléphone"
-                style={{
-                  "--PhoneInputCountryFlag-height": "1em",
-                  "--PhoneInputCountrySelectArrow-opacity": "0.5",
-                }}
               />
-              {isCheckingPhone && (
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                </div>
-              )}
             </div>
-          </FormControl>
-          <FormMessage />
-          {phoneErrors.phone ? (
-            <p className="text-red-500 text-xs flex items-center mt-1">
-              <AlertCircle className="mr-1 h-4 w-4" />
-              {phoneErrors.phone}
-            </p>
-          ) : (
-            <p className="text-xs text-gray-500 mt-1">{getPhoneExample()}</p>
-          )}
-        </FormItem>
-      )}
-    />
-  </div>
 
+            {/* Champ Téléphone */}
+            <div className="flex-1 min-w-[250px]">
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Téléphone <span className="text-[#1CD5F5]">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <PhoneInput
+                          defaultCountry={getCurrentCountryCode() as any}
+                          value={field.value || undefined}
+                          onChange={handlePhoneChange}
+                          onBlur={handlePhoneBlur}
+                          className={cn(
+                            "w-full h-12 px-3 rounded-lg border bg-white",
+                            phoneErrors.phone || form.formState.errors.phone
+                              ? "border-red-500"
+                              : "border-gray-300 focus:border-blue-500"
+                          )}
+                          international
+                          countryCallingCodeEditable={false}
+                          placeholder="Entrez votre numéro de téléphone"
+                          style={{
+                            "--PhoneInputCountryFlag-height": "1em",
+                            "--PhoneInputCountrySelectArrow-opacity": "0.5",
+                          }}
+                        />
+                        {isCheckingPhone && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                            <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                          </div>
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                    {phoneErrors.phone ? (
+                      <p className="text-red-500 text-xs flex items-center mt-1">
+                        <AlertCircle className="mr-1 h-4 w-4" />
+                        {phoneErrors.phone}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {getPhoneExample()}
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
+
           <div className="mb-4">
             <FormField
               control={form.control}
@@ -512,9 +533,10 @@ export default function ProStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte que mes données soient utilisées par Catchhub pour
-                    créer mon compte et recevoir des communications liées à la
-                    plateforme, conformément à la politique de confidentialité.
+                    J&apos;accepte que mes données soient utilisées par Catchhub
+                    pour créer mon compte et recevoir des communications liées à
+                    la plateforme, conformément à la politique de
+                    confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
