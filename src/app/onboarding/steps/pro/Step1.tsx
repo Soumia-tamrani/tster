@@ -78,6 +78,7 @@ export default function ProStep1({
       city: "",
       consent: false,
     },
+    mode: "onChange",
   });
 
   const getCurrentCountryCode = (): string => {
@@ -271,7 +272,6 @@ export default function ProStep1({
       form.clearErrors("email");
       form.clearErrors("phone");
 
-      // Check email uniqueness
       const emailResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -291,7 +291,6 @@ export default function ProStep1({
         return;
       }
 
-      // Check phone uniqueness
       const phoneResponse = await fetch("/api/email/check-unique", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
