@@ -373,7 +373,9 @@ export default function ProStep1({
                   <FormControl>
                     <Input className="h-12" {...field} id="firstName" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -388,7 +390,9 @@ export default function ProStep1({
                   <FormControl>
                     <Input className="h-12" {...field} id="lastName" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -408,14 +412,15 @@ export default function ProStep1({
                       type="email"
                       onChange={(e) => {
                         field.onChange(e);
-                        // Clear email errors when user starts typing
                         if (form.formState.errors.email) {
                           form.clearErrors("email");
                         }
                       }}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -437,7 +442,9 @@ export default function ProStep1({
                       countries={countries}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="min-h-[20px]">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -454,7 +461,9 @@ export default function ProStep1({
                     <FormControl>
                       <Input className="h-12" {...field} id="city" />
                     </FormControl>
-                    <FormMessage />
+                    <div className="min-h-[20px]">
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
