@@ -25,27 +25,27 @@ export default function CookieModal({ onClose }: { onClose: () => void }) {
   const handleSavePreferences = () => {
     try {
       Cookies.set("cookie_consent", "accepted", {
-        expires: 365,
-        sameSite: "Lax",
+      expires: 365,
+      sameSite: "Lax",
         path: "/",
         domain: window.location.hostname,
-      });
+    });
 
       Cookies.set("cookie_preferences", JSON.stringify(preferences), {
-        expires: 365,
-        sameSite: "Lax",
+      expires: 365,
+      sameSite: "Lax",
         path: "/",
         domain: window.location.hostname,
+    });
+
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      window.gtag("consent", "update", {
+        ad_storage: preferences.marketing ? "granted" : "denied",
+        analytics_storage: preferences.statistics ? "granted" : "denied",
       });
+    }
 
-      if (typeof window !== "undefined" && typeof window.gtag === "function") {
-        window.gtag("consent", "update", {
-          ad_storage: preferences.marketing ? "granted" : "denied",
-          analytics_storage: preferences.statistics ? "granted" : "denied",
-        });
-      }
-
-      onClose();
+    onClose();
     } catch (error) {
       console.error("Error saving preferences:", error);
     }
