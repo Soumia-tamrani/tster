@@ -98,8 +98,8 @@ export default function Home() {
                 >
                   <span className="inline-block mt-2">
                     {" "}
-                    Catchub, c'est bien plus qu'une plateforme :
-                    <br className="hidden sm:inline" /> c'est un catalyseur de
+                    Catchub, c’est bien plus qu’une plateforme :
+                    <br className="hidden sm:inline" /> c’est un catalyseur de
                     liens, de projets et de croissance partagée.
                   </span>
                 </p>
@@ -208,7 +208,7 @@ export default function Home() {
                 }}
               >
                 Facilitez vos mises en relation, trouvez des partenaires clés,
-                accédez à des offres d'emploi ciblées et faites grandir votre
+                accédez à des offres d’emploi ciblées et faites grandir votre
                 business grâce à un réseau intelligent et actif.
               </p>
             </div>
@@ -255,7 +255,7 @@ export default function Home() {
                 bg: "#6857FF30",
                 iconColor: "#6857FF",
                 title: "Mentorat",
-                desc: "Bénéficiez d'un mentorat personnalisé pour accélérer votre parcours et gagner en expérience.",
+                desc: "Bénéficiez d’un mentorat personnalisé pour accélérer votre parcours et gagner en expérience.",
               },
             ].map((feature, i) => (
               <div
@@ -332,8 +332,8 @@ export default function Home() {
                   textAlign: "center",
                 }}
               >
-                Catchub est plus qu'une plateforme : c'est un catalyseur
-                d'opportunités adaptées à chaque profil.
+                Catchub est plus qu'une plateforme : c’est un catalyseur
+                d’opportunités adaptées à chaque profil.
               </p>
             </div>
           </div>
@@ -350,9 +350,9 @@ export default function Home() {
                 </h3>
                 <div className="space-y-4">
                   {[
-                    "Accédez à des opportunités d'emploi adaptées à votre profil",
+                    "Accédez à des opportunités d’emploi adaptées à votre profil",
                     "Développez un réseau professionnel dynamique",
-                    "Bénéficiez d'opportunités de mentorat exclusives",
+                    "Bénéficiez d’opportunités de mentorat exclusives",
                     "Échangez avec une communauté professionnelle engagée",
                     "Enrichissez vos compétences grâce à un apprentissage continu",
                   ].map((item, i) => (
@@ -386,8 +386,8 @@ export default function Home() {
                 <div className="space-y-4">
                   {[
                     "Recrutez efficacement grâce au matching intelligent",
-                    "Publiez des offres d'emploi illimitées et ciblées",
-                    "Gagnez en visibilité auprès d'une audience qualifiée",
+                    "Publiez des offres d’emploi illimitées et ciblées",
+                    "Gagnez en visibilité auprès d’une audience qualifiée",
                     "Établissez des partenariats B2B pertinents",
                     "Analysez vos performances avec des insights sectoriels",
                   ].map((item, i) => (
@@ -443,7 +443,7 @@ export default function Home() {
                 style={{ fontFamily: "Poppins, sans-serif" }}
               >
                 Trouvez les réponses à vos interrogations avant de rejoindre
-                l'aventure.
+                l’aventure. 
               </p>
             </div>
           </div>
@@ -452,21 +452,20 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
               {[
                 {
-                  question: "Comment fonctionne l'inscription ?",
+                  question: "Comment fonctionne l’inscription ?",
                   answer:
-                    "Remplissez un formulaire rapide, choisissez votre profil (professionel ou entreprise) et rejoignez la liste d'attente. Vous serez notifié dès l'activation de votre accès.",
+                    "Remplissez un formulaire rapide, choisissez votre profil (professionel ou entreprise) et rejoignez la liste d’attente. Vous serez notifié dès l’activation de votre accès.",
                 },
 
                 {
-                  question:
-                    "Que se passe-t-il à la fin de l'essai gratuit ?",
+                  question: "Que se passe-t-il à la fin de l’essai gratuit ?",
                   answer:
                     "Connectez-vous avec des professionnels et des entreprises de votre secteur grâce à notre algorithme de matching avancé.",
                 },
 
                 {
                   question:
-                    "Quels types d'abonnements seront proposés après la période d'essai ?",
+                    "Quels types d’abonnements seront proposés après la période d’essai ?",
                   answer: (
                     <>
                       <span>
@@ -478,13 +477,13 @@ export default function Home() {
                       <span>
                         {" "}
                         - Entreprises : Choisissez un abonnement adapté, ou
-                        l'accès avancé sera désactivé sans engagement.
+                        l’accès avancé sera désactivé sans engagement.
                       </span>
                     </>
                   ),
                 },
                 {
-                  question: "Est-ce que c'est vraiment gratuit ?",
+                  question: "Est-ce que c’est vraiment gratuit ?",
                   answer: (
                     <>
                       <span>
@@ -495,7 +494,7 @@ export default function Home() {
                       <br className="hidden sm:inline" />
                       <span>
                         {" "}
-                        - Entreprises : 1 mois d'essai gratuit, puis abonnement
+                        - Entreprises : 1 mois d’essai gratuit, puis abonnement
                         pour continuer à utiliser les services.
                       </span>
                     </>
@@ -504,13 +503,13 @@ export default function Home() {
                 {
                   question: "Qui peut utiliser la plateforme ?",
                   answer:
-                    "La plateforme s'adresse aux professionnels en quête d'opportunités, aux entreprises souhaitant recruter, collaborer ou renforcer en visibilité.",
+                    "La plateforme s’adresse aux professionnels en quête d’opportunités, aux entreprises souhaitant recruter, collaborer ou renforcer en visibilité.",
                 },
                 {
                   question:
                     "Comment la confidentialité de mes données est-elle assurée ?",
                   answer:
-                    "Nous assurons la sécurité de vos données conformément aux normes en vigueur. Consultez notre politique de confidentialité pour plus d'informations.",
+                    "Nous assurons la sécurité de vos données conformément aux normes en vigueur. Consultez notre politique de confidentialité pour plus d’informations.",
                 },
               ].map((item, i) => (
                 <div
@@ -552,7 +551,7 @@ export default function Home() {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <img
-                  src="/logo-Footer.png"
+                  src="/logoFooter.png"
                   alt="Catchub Logo"
                   className="h-7 w-auto hover:opacity-90 transition-opacity duration-300"
                 />
@@ -604,7 +603,8 @@ export default function Home() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="#"
+                  target="_blank"
+                    href="https://itskillsourcing.sharepoint.com/:w:/s/KnovaDev/EWJW4iZl3NxPtzLG3RKNe2QBM9Si9PWRLjq1-TbvKoVuyA?e=deDy4o"
                     className="text-sm text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors"
                   >
                     Conditions d'utilisation
@@ -662,8 +662,6 @@ export default function Home() {
               <Link
                 key={i}
                 href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-gray-300 dark:text-gray-400 hover:text-blue-600 dark:hover:text-purple-400 transition-colors hover:-translate-y-0.5 transform"
                 aria-label={social.name}
               >

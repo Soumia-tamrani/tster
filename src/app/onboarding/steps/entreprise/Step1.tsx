@@ -438,6 +438,7 @@ export default function EntrepriseStep1({
                     <CountrySelector
                       value={field.value}
                       onChange={handleCountryChange}
+                      defaultValue="Maroc"
                       onPrefixChange={() => {}}
                       error={form.formState.errors.country?.message}
                       countries={countries}
@@ -447,6 +448,8 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
+              <div className="flex-1 min-w-[250px]">
+
             <FormField
               control={form.control}
               name="email"
@@ -468,6 +471,9 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
+              </div>
+              <div className="flex-1 min-w-[250px]">
+
             <FormField
               control={form.control}
               name="phone"
@@ -479,7 +485,7 @@ export default function EntrepriseStep1({
                   <FormControl>
                     <div
                       className={cn(
-                        "rounded-lg bg-white h-12 border relative",
+                        "rounded-lg bg-white h-12 border relative pl-3",
                         phoneErrors.phone || form.formState.errors.phone
                           ? "border-red-500"
                           : "border-gray-300 focus-within:border-blue-500"
@@ -516,6 +522,8 @@ export default function EntrepriseStep1({
                 </FormItem>
               )}
             />
+              </div>
+
             <FormField
               control={form.control}
               name="companyName"
@@ -609,10 +617,9 @@ export default function EntrepriseStep1({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub
-                    Pour Créer Mon Compte Et Recevoir Des Communications Liées À
-                    La Plateforme, Conformément À La Politique De
-                    Confidentialité.
+                    J&apos;accepte que mes données soient utilisées par Catchhub pour
+                    créer mon compte et recevoir des communications liées à la
+                    plateforme, conformément à la politique de confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>

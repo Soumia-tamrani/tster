@@ -38,11 +38,37 @@ const secteurOptions = [
   { value: "AUTRE", label: "Autre" },
 ];
 
+const besoinOptions = [
+  "Présenter ma marque et mes activités",
+  "Développer mon réseau B2B (partenariats, clients, collaborations)",
+  "Attirer des talents qualifiés pour rejoindre mon entreprise",
+  "Accéder à des insights sectoriels (veille, tendances, comparatifs)",
+  "Accéder à un vivier de freelances qualifiés pour mes projets",
+  "Rechercher des intervenants, ou formateurs",
+  "Échanger avec d'autres PME ou acteurs de mon secteur",
+  "Être guidé dans ma transformation numérique ou stratégique",
+  "Je ne sais pas encore / Découvrir la plateforme",
+];
+
 const formSchema = z.object({
   secteur: z.string().min(1, "Le secteur d'activité est requis."),
   secteurAutre: z.string().optional(),
-  besoin: z.string().min(1, "Le besoin principal est requis."),
-  site: z.string().optional(),
+  besoin: z
+    .array(z.string())
+    .min(1, "Au moins un besoin doit être sélectionné.")
+    .max(3, "Maximum 3 besoins peuvent être sélectionnés."),
+  site: z
+    .string()
+    .min(1, "Le site web est requis.")
+    .url("Veuillez entrer une URL valide (ex: www.xyz.com)")
+    .refine((url) => {
+      try {
+        const urlObj = new URL(url.startsWith("http") ? url : `https://${url}`);
+        return urlObj.protocol === "http:" || urlObj.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }, "Format d'URL invalide"),
   referralSource: z.string().min(1, "Ce champ est requis."),
   consent: z.literal(true, {
     errorMap: () => ({ message: "Vous devez accepter pour continuer." }),
@@ -68,7 +94,7 @@ export default function EntrepriseStep3({
     defaultValues: defaultValues || {
       secteur: "",
       secteurAutre: "",
-      besoin: "",
+      besoin: [],
       site: "",
       referralSource: "",
       consent: false,
@@ -209,12 +235,39 @@ export default function EntrepriseStep3({
                 <FormItem>
                   <FormLabel>Besoin principal</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      className="h-12 w-full"
-                    />
+                    <div className="space-y-2">
+                      {besoinOptions.map((option) => (
+                        <div
+                          key={option}
+                          className="flex items-center space-x-2"
+                        >
+                          <Checkbox
+                            id={option}
+                            checked={field.value?.includes(option)}
+                            onCheckedChange={(checked) => {
+                              const currentValue = field.value || [];
+                              if (checked) {
+                                if (currentValue.length < 3) {
+                                  field.onChange([...currentValue, option]);
+                                }
+                              } else {
+                                field.onChange(
+                                  currentValue.filter(
+                                    (value) => value !== option
+                                  )
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor={option}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -225,15 +278,23 @@ export default function EntrepriseStep3({
               name="site"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Site web d&apos;entreprise.</FormLabel>
+                  <FormLabel>Site web d&apos;entreprise</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       value={field.value || ""}
-                      onChange={field.onChange}
+                      onChange={(e) => {
+                        let value = e.target.value;
+                        if (value && !value.startsWith("http")) {
+                          value = `https://${value}`;
+                        }
+                        field.onChange(value);
+                      }}
+                      placeholder="www.xyz.com"
                       className="h-12 w-full"
                     />
                   </FormControl>
+                  <FormDescription>Format attendu: www.xyz.com</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -294,9 +355,10 @@ export default function EntrepriseStep3({
                     htmlFor="consent"
                     className="text-xs text-[#7E8B93] font-normal"
                   >
-                    J&apos;accepte Que Mes Données Soient Utilisées Par Catchhub Pour
-                    Créer Mon Compte Et Recevoir Des Communications Liées À La
-                    Plateforme, Conformément À La Politique De Confidentialité.
+                    J&apos;accepte que mes données soient utilisées par Catchhub
+                    pour créer mon compte et recevoir des communications liées à
+                    la plateforme, conformément à la politique de
+                    confidentialité.
                   </FormLabel>
                   <FormMessage />
                 </FormItem>
