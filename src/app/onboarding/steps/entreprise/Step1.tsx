@@ -365,8 +365,8 @@ export default function EntrepriseStep1({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="flex flex-col max-w-2xl mx-auto mt-3 gap-4 ">
-          <h2 className="text-2xl font-semibold text-[#013959] mb-9">
+        <div className="flex flex-col max-w-2xl mx-auto mt-7 gap-4 ">
+          <h2 className="text-2xl font-semibold text-[#013959] mb-3" style={{ fontFamily: "Montserrat, sans-serif", fontSize: "22px" }}>
             Informations entreprise
           </h2>
           <p className="text-[#7E8B93] text-sm mb-6">
@@ -376,7 +376,7 @@ export default function EntrepriseStep1({
             Tous les champs marqués par {" "}
             <span className="text-[#1CD5F5]"> * </span> sont obligatoires
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mb-7">
             <FormField
               control={form.control}
               name="firstName"
@@ -413,7 +413,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Votre Rôle Dans L&apos;entreprise
+                    Votre rôle dans l&apos;entreprise
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -471,7 +471,7 @@ export default function EntrepriseStep1({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Email Professionnel{" "}
+                      Email professionnel{" "}
                       <span className="text-[#1CD5F5]">*</span>
                     </FormLabel>
                     <FormControl>
@@ -544,7 +544,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Nom De L&apos;entreprise
+                    Nom de l&apos;entreprise
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>
@@ -575,7 +575,7 @@ export default function EntrepriseStep1({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Taille De L&apos;entreprise{" "}
+                    Taille de l&apos;entreprise{" "}
                     <span className="text-[#1CD5F5]">*</span>
                   </FormLabel>
                   <FormControl>

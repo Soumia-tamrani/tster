@@ -79,15 +79,17 @@ export default function ProStep4() {
   return (
     <div className="max-w-2xl mx-auto text-center">
       <h2 className="text-2xl font-semibold text-[#013959] mb-4">
-        Bienvenue sur CatchHub!
+        Merci pour votre inscription !
       </h2>
       <p className="text-[#7E8B93] mb-8">
-        Partagez votre lien de parrainage et invitez vos contacts à rejoindre la
-        communauté.
+        Vous êtes parmi les premiers à découvrir Catchub.Le lancement officiel arrive cet été. 
       </p>
 
       <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+
+        <div className="p-0 m-0">Invitez des responsables ou dirigeants à rejoindre Catchub, </div>
         <div className="flex items-center gap-2 mb-6">
+
           <input
             type="text"
             value={referralLink}

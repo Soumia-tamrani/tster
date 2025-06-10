@@ -155,7 +155,7 @@ export default function MultistepWrap({
         className="relative flex flex-col items-center justify-center pt-8 pb-8 md:pt-12 md:pb-12 bg-transparent z-10 w-[90vw] max-w-[700px]"
         style={{ marginTop: 40 }}
       >
-        <h1 className="text-2xl md:text-4xl font-semibold mb-5 text-white text-center">
+        <h1 className="text-2xl md:text-4xl font-semibold mb-5 text-white text-center" style={{ fontFamily: "Montserrat, sans-serif" }}>
           Dynamisez votre carrière
         </h1>
         <p className="text-center max-w-xs md:max-w-lg mx-auto text-sm md:text-lg text-white opacity-80" style={{ fontFamily: "Poppins , sans-serif", fontSize: "16px" }}>

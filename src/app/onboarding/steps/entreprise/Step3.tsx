@@ -180,15 +180,14 @@ export default function EntrepriseStep3({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-semibold text-[#013959] mb-2">
+        <div className="max-w-2xl mx-auto mt-6">
+          <h2 className="text-2xl font-semibold text-[#013959] mb-3">
             Votre profil entreprise
           </h2>
-          <p className="text-[#7E8B93] text-sm mb-6">
-            Partagez quelques informations pour mieux adapter la plateforme à
-            votre structure.
+          <p className="text-[#7E8B93] text-sm mb-8">
+            Partagez quelques informations pour mieux adapter la plateforme à votre structure.
           </p>
-          <div className="flex flex-col gap-6 mb-4">
+          <div className="flex flex-col gap-8 mb-4">
             <FormField
               control={form.control}
               name="secteur"
@@ -232,10 +231,10 @@ export default function EntrepriseStep3({
               control={form.control}
               name="besoin"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-4">
                   <FormLabel>Besoin principal</FormLabel>
                   <FormControl>
-                    <div className="space-y-2">
+                    <div className="space-y-4 ">
                       {besoinOptions.map((option) => (
                         <div
                           key={option}
@@ -273,7 +272,7 @@ export default function EntrepriseStep3({
                 </FormItem>
               )}
             />
-            <FormField
+            <FormField 
               control={form.control}
               name="site"
               render={({ field }) => (
@@ -304,7 +303,7 @@ export default function EntrepriseStep3({
               name="referralSource"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Comment Avez-Vous Découvert Catchhub ?</FormLabel>
+                  <FormLabel>Comment avez-vous découvert Catchhub ?</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger
@@ -338,7 +337,8 @@ export default function EntrepriseStep3({
               )}
             />
           </div>
-          <div className="mb-4">
+  
+          <div className="mb-4 mt-9 ">
             <FormField
               control={form.control}
               name="consent"
