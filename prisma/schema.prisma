@@ -59,6 +59,14 @@ model CookieConsent {
   updatedAt     DateTime @updatedAt
 }
 
+model EmailVerification {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  token     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
 enum UserRole {
   PROFESSIONAL
   ENTREPRISE
