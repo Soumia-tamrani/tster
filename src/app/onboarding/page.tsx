@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { ArrowLeft, Building2, CheckCircle, UserRound } from "lucide-react";
+import { AlignCenter, ArrowLeft, Building2, CheckCircle, UserRound } from "lucide-react";
 import MultistepWrap from "./MultistepWrap";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -61,12 +61,11 @@ function OnboardingPageInner() {
 
       <div className="absolute w-[90vw] max-w-[700px] h-[80px] md:h-[120px] top-[80px] md:top-[140px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 md:gap-6 z-10">
         <div className="text-center">
-          <h1 className="text-2xl md:text-4xl font-semibold mb-2 text-white">
-            Lorem ipsum dolor sit amet
+          <h1 className="text-2xl md:text-4xl font-semibold mb-4 text-white" style={{ fontFamily: "Montserrat, sans-serif" , fontWeight: 600 }}>
+            Bâtissez l’avenir de vos collaborations.
           </h1>
-          <p className="text-xs md:text-sm text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            euismod, nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
+          <p className="text-xs md:text-sm text-white" style={{ fontFamily: "Poppins, sans-serif", fontSize: "13px" }}>
+            Rejoignez Catchub pour développer votre réseau, attirer les bons profils et activer de vraies opportunités professionnelles. 
           </p>
         </div>
       </div>
@@ -74,12 +73,11 @@ function OnboardingPageInner() {
       {!selectedProfile && (
         <div className="bg-white rounded-[18px] md:rounded-[22px] mt-[180px] md:mt-[300px] shadow-[0_8px_8px_rgba(171,171,171,0.03),0_11px_11px_rgba(171,171,171,0.05),0_3px_6px_rgba(171,171,171,0.06)] w-[95vw] max-w-[1013px] h-auto md:h-[799.44px] p-4 md:p-[91px_61px] flex flex-col items-center text-[#013959] relative z-10 border border-[#E0E0E0]">
           <div className="text-center mb-6 md:mb-8">
-            <h2 className="text-xl md:text-3xl font-semibold mb-2">
-              Lorem ipsum dolor sit amet
+            <h2 className="text-xl md:text-3xl font-semibold mb-2" style={{ fontFamily: "Montserrat, sans-serif" , fontWeight: 600 }}>
+              Choisissez votre profil
             </h2>
-            <p className="text-xs md:text-sm text-[#7E8B93]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              euismod, nisl nec tincidunt luctus, nunc erat sollicitudin ipsum.
+            <p className="text-xs md:text-sm text-[#7E8B93]" style={{ fontFamily: "Poppins, sans-serif", fontSize: "13px" }}>
+              Adoptez celui qui correspond à vos ambitions et accédez à des opportunités personnalisées pour développer votre réseau et faire grandir vos projets. 
             </p>
           </div>
 
