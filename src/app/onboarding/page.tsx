@@ -87,7 +87,7 @@ function OnboardingPageInner() {
               <div className="w-16 h-16 md:w-[75.05px] md:h-[75.05px] rounded-full bg-[#1CD5F5]/10 flex items-center justify-center mb-4 md:mb-5">
                 <UserRound className="text-[#1CD5F5]" size={24} />
               </div>
-              <h3 className="text-lg md:text-2xl font-semibold mb-4 md:mb-5">
+              <h3 className="text-lg md:text-2xl font-semibold mb-4 md:mb-5">       
                 {" "}
                 Professionnel
               </h3>
